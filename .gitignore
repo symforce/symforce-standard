@@ -1,13 +1,24 @@
-# Bootstrap
-app/bootstrap*
-
-# Symfony directories
-vendor/*
-*/logs/*
-*/cache/*
-web/uploads/*
-web/bundles/*
-
-# Configuration files
-app/config/parameters.ini
+.idea
+.DS_Store
+composer.phar
+app/cache/
+app/logs/
 app/config/parameters.yml
+app/Resources/java/
+app/Resources/AppAdminBundle/src/AppAdminCache/
+app/Resources/AppAdminBundle/translations/*.yaml
+app/Resources/views/
+app/upload/
+bin/doctrine
+nbproject/
+src/Acme/
+tools/smtpd/cache/
+tools/smtpd/node_modules
+tools/smtpd/config.js
+vendor/
+web/bundles/*
+web/js/
+web/dev.php
+web/test.php
+composer.lock 
+src/Knp/
