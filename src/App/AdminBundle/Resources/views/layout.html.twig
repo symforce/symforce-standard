@@ -1,0 +1,168 @@
+{% set app_domain = app_param('app.admin.domain') %}
+{% set app_version = app_param('app.version') %}
+{% import "AppAdminBundle::admin_macro.html.twig" as app_admin_macro %}
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]> <html class="no-js not-ie8 gt-ie8" lang="en"> <![endif]-->
+<!--[if !IE]><!--> <html class="no-js not-ie8" lang="en"> <!--<![endif]-->
+<head>
+  <head>
+    <meta charset="utf-8">
+{% block head %}
+    <meta name='viewport' content='width=1190'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>{% block title %}{{ 'app.admin.title'|trans({},  app_domain ) }}{% endblock %}</title>
+    <link rel="icon" sizes="16x16" href="{{ asset('favicon.ico') }}" />
+    {% block stylesheets %}
+        {% stylesheets
+
+            '@AppAdminBundle/Resources/public/bootstrap/css/bootstrap.min.css'
+            '@AppAdminBundle/Resources/public/bootstrap/css/bootstrap-theme.min.css'
+            '@AppAdminBundle/Resources/public/bootstrap-colorpicker/css/bootstrap-colorpicker.css'
+            '@AppAdminBundle/Resources/public/bootstrap-combobox/css/bootstrap-combobox.css'
+            '@AppAdminBundle/Resources/public/typeahead/typeahead.css'
+
+            '@AppAdminBundle/Resources/public/font-awesome4/css/font-awesome.css'
+
+            '@AppAdminBundle/Resources/public/bootstrap-datepicker/css/datepicker3.css'
+            '@AppAdminBundle/Resources/public/bootstrap-timepicker/css/bootstrap-timepicker.css'
+            '@AppAdminBundle/Resources/public/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css'
+            '@AppAdminBundle/Resources/public/jcrop/css/jquery.Jcrop.css'
+
+            debug=false 
+            filter='lessphp'
+            output='bundles/css/general_admin.css'
+        %}
+            <link href="{{ asset_url }}?{{ app_version }}" rel="stylesheet" media="screen" />
+        {% endstylesheets %}
+        
+        {% block header_css %}
+            {% stylesheets
+                '@AppAdminBundle/Resources/public/admin/css/admin.less'
+                '@AppAdminBundle/Resources/public/admin/css/form.less'
+                filter='lessphp,?yui_css'
+                output='bundles/css/public_admin.css'
+            %}
+                <link href="{{ asset_url }}?{{ app_version }}" rel="stylesheet" media="screen" />
+            {% endstylesheets %}
+        {% endblock %}
+    {% endblock %}
+            
+    {% javascripts 
+            '@AppAdminBundle/Resources/public/underscore/underscore-min.js'
+            '@AppAdminBundle/Resources/public/jquery/jquery.js'
+
+            '@AppAdminBundle/Resources/public/jquery_file_upload/js/jquery.ui.widget.js'
+            '@AppAdminBundle/Resources/public/jquery_file_upload/js/jquery.iframe-transport.js'
+            '@AppAdminBundle/Resources/public/jquery_file_upload/js/jquery.fileupload.js'
+
+            '@AppAdminBundle/Resources/public/bootstrap/js/bootstrap.min.js'
+            '@AppAdminBundle/Resources/public/bootstrap-datepicker/js/bootstrap-datepicker.js'
+            '@AppAdminBundle/Resources/public/bootstrap-datepicker/js/locales/*.js'
+            '@AppAdminBundle/Resources/public/bootstrap-timepicker/js/bootstrap-timepicker.js'
+            '@AppAdminBundle/Resources/public/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js'
+            '@AppAdminBundle/Resources/public/bootstrap-datetimepicker/js/locales/*.js'
+            '@AppAdminBundle/Resources/public/bootstrap-colorpicker/js/bootstrap-colorpicker.js'
+            '@AppAdminBundle/Resources/public/bootstrap-combobox/js/bootstrap-combobox.js'
+            '@AppAdminBundle/Resources/public/typeahead/typeahead.min.js'
+            '@AppAdminBundle/Resources/public/bootstrap-bootboxjs/bootbox.min.js'
+            '@AppAdminBundle/Resources/public/jcrop/js/jquery.Jcrop.js'
+            '@AppAdminBundle/Resources/public/js/jquery.resizecrop-1.0.3.js'
+
+            '@AppAdminBundle/Resources/public/js/klass.js'
+
+            debug=false 
+            output='bundles/js/general_admin.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}?{{ app_version }}"></script>
+    {% endjavascripts %}
+        
+    <script type="text/javascript" src="{{ asset('/bundles/appadmin/tinymce/tinymce.min.js') }}"></script>
+    
+    {% javascripts 
+            '@AppAdminBundle/Resources/public/js/form.js'
+            '@AppAdminBundle/Resources/public/admin/js/admin.js'
+            output='bundles/js/public_admin.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}?{{ app_version }}"></script>
+    {% endjavascripts %}
+    
+{% endblock %}
+</head>
+
+<body data-spy="scroll" data-target=".subnav" data-offset="50" {% if app.user and app.user.usergroup and  is_granted("ROLE_ADMIN") %}class="app_user_group_{{ app.user.usergroup.slug }}"{% endif %}>
+{% block html_body %}
+
+{% block navbar %}
+  {% include 'AppAdminBundle::navbar.html.twig' %}
+{% endblock navbar %}
+
+{% block body %}
+
+ <div class="container1">                
+    <div class="content">   
+            
+    {% block content_header %}
+    <div class="col-xs-12">
+        {% block content_breadcrumb %}
+            <ol class="breadcrumb">
+                <li><a href="{{ path( app_param('app.admin.route.dashboard_path') ) }}">{{ 'app.admin.dashboard'|trans({}, app_domain ) }}</a>  </li>
+
+                {% if admin %}
+                    {% if admin.routeparent %}
+                        {% for _admin in admin.routeparents %}
+                            {{ app_admin_macro.breadcrumb(_admin, false ) }}
+                        {% endfor %}
+                    {% endif %}
+                    
+                    {{ app_admin_macro.breadcrumb(admin, action ) }}
+                    
+                {% endif %}
+            </ol>
+        {% endblock %}
+        
+    </div>  <!--/content_header -->
+    {% endblock %}
+
+    {% block content %}
+        '%kernel.root_dir%/../vendor/silica/components/resources/colorpicker/css/bootstrap-colorpicker.css'
+    {% endblock %}
+  </div><!--/#body.row-fluid -->
+
+
+</div><!-- /content --> 
+</div><!-- /container -->    
+{% endblock %}
+
+
+{% block footer %} 
+    <div id="footer"> 
+        <div>
+        {% block footer_text %}
+              &copy; {{ ("now"|date('Y') > 2013) ? '2013 - ' ~ "now"| date('Y') : '2013' }}
+        {% endblock %}
+        </div>
+    </div>
+    
+{% endblock %}
+
+{% endblock html_body %}
+
+
+{# filter='?closure' #}
+<!--[if lt IE 9]>
+    {% javascripts 
+        '@AppAdminBundle/Resources/public/ie/html5shiv/html5shiv.js'
+        '@AppAdminBundle/Resources/public/ie/respond/respond.min.js'
+        '@AppAdminBundle/Resources/public/ie/fixie8.js'
+        debug=false
+        output='bundles/js/public_fixie8.js'
+    %}<script type="text/javascript" src="{{ asset_url }}?{{ app_version }}"></script>{% endjavascripts %}
+    <link href="{{ asset('/bundles/appadmin/ie/bootstrap-pie.css') }}"  rel="stylesheet" media="screen" />
+<![endif]-->
+<!--[if IE 7]><link href="{{ asset('/bundles/appadmin/ie/bootstrap-ie7.css') }}"  rel="stylesheet" media="screen" /><![endif]-->
+
+</body>
+</html>

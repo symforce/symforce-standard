@@ -1,0 +1,23 @@
+imports:
+    - { resource: admin.yml }
+    - { resource: fos_user.yml }
+    - { resource: fos_message.yml }
+    # - { resource: fos_comment.yml }
+    - { resource: stof.yml }
+    # - { resource: jms_di.yml }
+    - { resource: routing.yml }
+    - { resource: mopa.yml }
+    - { resource: knp_paginator.yml }
+    
+parameters:
+    security.authentication.listener.form.class: App\UserBundle\Listener\UserLoginFormListener
+
+gregwar_captcha:
+    width: 120
+    height: 40
+    length: 5
+    # quality: 90
+    as_url: true 
+    reload: true 
+    keep_value: false 
+    expiration: 60

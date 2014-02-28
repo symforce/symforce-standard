@@ -1,0 +1,7 @@
+_app_admin_default:
+    resource: "@AppAdminBundle/Controller"
+    type:     annotation
+
+_app_admin:
+    resource: "."
+    type: "app.admin"

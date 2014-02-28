@@ -1,0 +1,153 @@
+app:
+    admin:
+        dashboard: 管理面板
+        
+    action:
+        list: 
+            label: 列表
+            action_label: %admin%列表
+        create: 
+            label: 创建 
+            action_label: 创建%admin%
+            title_label: 创建%admin%
+            form_label: 创建%admin%
+            finish: 创建 `%object%` 成功
+        update: 
+            label: 编辑 
+            action_label: 编辑%admin%
+            title_label: 编辑%admin% `%object%`
+            form_label: 编辑%admin% `%object%`
+            finish: 编辑 `%object%` 成功
+        delete: 
+            label: 删除 
+            action_label: 删除%admin%
+            title_label: 删除%admin% `%object%`
+            form_label: 你确定要删除%admin% `%object%` 吗 ?
+            finish: 删除 `%object%` 成功
+            error:
+                child: 不能删除%admin%, 因为无法级联删除%count%个%child%
+        view:
+            label: 查看
+            action_label: 查看%admin%
+            title_label: 查看%admin%
+            form_label: 查看%admin% `%object%`
+        search:
+            label: 搜索
+            action_label: 搜索%admin%
+            title_label: 搜索%admin%
+        batch:
+            label: 批量操作
+            action_label: 批量操作
+            title_label: 批量操作
+        page:
+            label: 编辑页面
+            action_label: 编辑%admin%页面
+            title_label: 编辑%admin% `%object%` 页面
+    button:
+        save: 保存更改
+        cancel: 取消 
+        delete: 是的, 请删除它
+    form:
+        captcha:
+            label: 验证码
+            reload: 换一张
+        choices:
+            yesno: { yes: 是, no: 否 } 
+        file:
+            error: 
+                type: 只允许文件类型 @{types}, 您选择了 `@{file}`
+                size: 您选择的文件尺寸 @{size} 大于 @{max_size} 
+    profile:
+        welcome: 你好, %username%
+        logout: 退出
+
+    login:
+        label:  请您登陆系统
+        username: 
+            label: 用户名
+            placeholder: 请输入用户名或者邮箱
+        password:  
+            label: 密码
+        signin: 
+            label: 登录
+        remembme: 
+            label: 自动登录
+            resetting: <a href="%url%">忘记密码?</a>
+        error:
+            credentials: 用户名或者密码错误
+            captcha: 验证码错误
+            disabled: 用户未激活
+        
+    property:
+        email:
+            label: 邮件
+        roles:
+            label: 角色
+        enabled:
+            label: 启用
+        password:
+            label: 密码
+        name:
+            label: 名
+        slug:
+            label: 通配符
+        file:
+            label: 文件
+        description:
+            label: 描述
+        updated:
+            label: 更新时间
+        id:
+            label: Id
+        created:
+            label: 创建时间
+        image:
+            label: 图片
+        title:
+            label: 标题
+        keywords:
+            label: 关键字
+        order_by:
+            label: 排序
+        contact:
+            label: 联系人
+        phone:
+            label: 电话
+        content:
+            label: 内容
+        help_doc:
+            label: 帮助文档
+        position:
+            label: 职位
+        vacancies:
+            label: 空缺人数
+        details:
+            label: 详细
+        category:
+            label: 分类
+        url:
+            label: Url
+        type:
+            label: 类
+        user_group:
+            label: 用户组
+    menu:
+        sys: 基本菜单
+        admin_group: 系统菜单
+    breadcrumb:
+        child: %parent%-%admin%列表
+
+    filemanager:
+        title: 文件管理器
+        empty: 没有资源
+    tree:
+        root: %admin%的根
+        child: 子列表
+        create:
+            title: 创建 %object% 的子%admin%
+    status:
+     all:
+         label: 所有
+         list: 所有%admin%
+app_page:
+    label: 栏目

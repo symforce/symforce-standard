@@ -1,0 +1,13 @@
+
+<form id="app_admin_locale_form" class="form-inline" action="{{ path('app_admin_locale' ) }}" method="post">
+    {# 
+    {{ form_widget(form.locale) }}
+    {{ form_widget(form.redirect_url) }}
+    #}
+    <select id="form_locale" name="form[locale]" class="form-control">
+        {% for value, text in form.languages %}
+              <option value="{{ value }}" {% if value == form.locale %} selected="selected"{% endif %}>{{ text }}</option>
+        {% endfor %}
+    </select>
+    <input type="hidden" id="form_redirect_url" name="form[redirect_url]" class="form-control" value="{{ form.redirect_url }}" />
+</form>

@@ -1,0 +1,100 @@
+{#{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block fos_user_content %}
+<p>
+{{ 'resetting.check_email'|trans({'%email%': email}) }}
+</p>
+{% endblock %}#}
+
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+{% block fos_user_content %}
+<style>
+    
+    
+    .content {
+        background: none repeat scroll 0 0 #EEEEEE;
+        border-radius: 10px;
+        border-top: 1px solid #DADADA;
+        margin: 74px auto;
+        padding-top: 10px;
+        width: 782px;
+    }
+    .content-head {
+        font-size: 1px;
+        height: 8px;
+        width: 782px;
+    }
+    .img {
+        background: url("http://st2.dbank.com/netdisk/images/newdisk/resetpassword-btn.png?v=343309") no-repeat #fff;
+    }
+    .content-body {
+        background: url("http://st2.dbank.com/netdisk/images/newdisk/resetpassword-body.png?v=343309") repeat-y;
+        padding: 30px 0 50px;
+        width: 782px;
+    }
+    .form {
+        height: 100px;
+        margin: 40px 0;
+        position: relative;
+        z-index:100;
+    }
+    .form .line7 {
+        font-size: 16px;
+        width: 55%;
+        margin: 0 auto;
+    }
+    .line7 i{
+        background: url("/bundles/appweb/images/emailico.gif") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+        border: 0 none;
+        border-radius: 30px;
+        height: 63px;
+        margin-top: 20px;
+        width: 60px;
+    }
+    .line7 .set-success {
+        background-position: -661px -55px;
+        display: inline-block;
+        height: 44px;
+        vertical-align: bottom;
+        width: 47px;
+    }
+
+    .content-foot {
+        background-position: -1px -12px;
+        height: 38px;
+        width: 782px;
+    }
+
+    .red{
+        color: red;
+    }
+
+</style>
+
+<div class="content">
+    {#<div class="btn content-head"></div>#}
+    <div class="content-body">
+        <div class="form">
+            <div id="resetSuccess_box" style="display: block;">
+
+                <div class="line7">
+                    <i class="col-app-4"></i>
+                    <div class="col-app-19" style="margin-left: 5%; margin-top: 30px;">
+                        <center>
+                            <p>
+                                {{ 'resetting.check_email'|trans({'%email%': email}) }}
+                            </p>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="img content-foot"></div>
+</div>
+{% endblock %}
+

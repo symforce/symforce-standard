@@ -1,0 +1,13 @@
+form:
+    optional: (optional)
+    owner: Owner
+    workflow: Workflow
+    authorize:
+        label: Authorize
+        autohide: Auto Hide
+        readonly: %action% read only
+        properties: Dynamic form
+        actions: Actions
+        select_all: Select All
+        cancel_all: Cancel All
+        default_value: Default 

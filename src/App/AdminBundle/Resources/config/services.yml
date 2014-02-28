@@ -1,0 +1,103 @@
+parameters:
+    app.admin.menu_builder.class: App\AdminBundle\Menu\Builder
+    # knp_menu.renderer.twig.class: App\AdminBundle\Menu\BootstrapRenderer
+    knp_menu.renderer.twig.template: "AppAdminBundle:Menu:menu_bootstrap.html.twig"
+    # app.admin.cache.path: "%kernel.cache_dir%/AdminLoaderCache.php"
+    # app.admin.cache.expired: "%kernel.cache_dir%/AdminLoaderExpired.php"
+    # knp_menu.renderer.list.options: { currentClass: "active" }
+    
+services:
+    # loader
+    app.admin.compiler:
+        class: App\AdminBundle\Compiler\Loader\Compiler
+    
+    app.page.service:
+        class: AppAdminCache\WebPageService
+        calls:
+            - [ setContainer, ["@service_container"] ]
+    app_router:
+        alias: app.page.service
+        
+    app.admin.generator:
+        class: App\AdminBundle\Compiler\Generator
+        arguments: [ "@service_container", null , null, null, null, null ]
+ 
+    app.admin.loader:
+        class: App\AdminBundle\Compiler\Loader\AdminLoader
+        arguments: [ "@service_container", null, null ]
+    
+    app.admin.imagine:
+        class: App\AdminBundle\Service\Imagine
+        arguments: [ "@service_container" ]
+    
+    app.admin.form.factory:
+        class: App\AdminBundle\Compiler\MetaFormFactory
+        arguments: [ "@doctrine", "@annotation_reader", null ]
+    
+    app.locale.listener:
+        class: App\AdminBundle\Compiler\LocaleListener
+        arguments: [ "@form.factory", null , null ]
+        tags:
+            - { name:"kernel.event_subscriber" }
+            
+    app.form.listener:
+        class: App\AdminBundle\Event\FormSubscriber
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name:"kernel.event_subscriber" }
+        
+    # Router
+    app.route.loader:
+        class: App\AdminBundle\Compiler\Loader\RouteCacheLoader
+        arguments: [ "@app.admin.loader", null ]
+
+    app.routing.loader:
+        class: App\AdminBundle\Compiler\Loader\RoutingLoader
+        public: false
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name:"routing.loader" }
+    # Menu 
+    app.admin.menu_builder:
+        class: "%app.admin.menu_builder.class%"
+        arguments: [ "@knp_menu.factory" ]
+        calls:
+            - [ setContainer, ["@service_container"] ]
+            
+    app.admin.menu.admin:
+        class: "%app.admin.menu_builder.class%"
+        factory_service: app.admin.menu_builder
+        factory_method: createDashboardMenu
+        scope: "request"
+        arguments: [ "@request" ]
+        tags:
+            - { name:"knp_menu.menu", alias:"admin"}
+   
+    # twig 
+    app.admin.twig.extension:
+        public: false
+        class: App\AdminBundle\Twig\Extension\AppAdminTwigExtension
+        arguments: [ "@twig.loader" ]
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name:"twig.extension" }
+    # trans
+    app.translation.loader.yaml:
+        class: App\AdminBundle\Translation\Loader\AppTransLoader
+        calls:
+            - [ setMetaLoader, ["@app.admin.loader"] ] 
+        tags:
+            - { name:"translation.loader", alias:"yaml" }
+
+    # doctrine
+    app.admin.dbal.listener:
+        class: App\AdminBundle\Doctrine\DBAL\Listener\AdminListener
+        public: false 
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: doctrine.event_subscriber }
+      

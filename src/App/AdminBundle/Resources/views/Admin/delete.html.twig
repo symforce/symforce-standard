@@ -1,0 +1,16 @@
+{% extends "AppAdminBundle::action_layout.html.twig" %}
+
+
+{% block content_left %}
+
+    <div class="well">
+    <form class="form-horizontal" method="post">
+        {{ form_widget(form) }}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-danger">{{ action.button('delete') }}</button>
+            <button type="reset" class="btn">{{ action.button('cancel')  }}</button>
+        </div>
+    </form>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,7 @@
+# app/config/app/menu.yml
+
+knp_menu:
+    twig:
+        template: "AppAdminBundle:Menu:menu_bootstrap.html.twig"
+    templating: false # if true, enables the helper for PHP templates
+    default_renderer: bootstrap # The renderer to use, list is also available by default

@@ -1,0 +1,50 @@
+app_group:
+    label: User Group
+    form:
+        roles:
+            choice: { role_user: User, role_editor: Editor, role_admin: Administrator }
+        authorize:
+            label: Authorize
+        default_group:
+            label: Default Group
+        trust_group:
+            label: Trust Group
+app_user:
+    label: User
+    form:
+        username:
+            label: Username
+        email:
+            label: Email
+        plainPassword:
+            label: Password
+        expiresAt:
+            label: Expires date
+        plainPassword:
+            label: Password
+        id_card:
+            label: ID
+        real_name:
+            label: Real  Name
+        gender:
+            label: Gender
+            choice: { option_1: male, option_0: female }
+        avatar:
+            label: Avatar
+        phone_number:
+            label: Phone number
+        mobile_phone_number:
+            label: Mobile phone number
+            
+app_user_log:
+    label: User Logs
+    form:
+        type:
+            label: Event type
+            choice: { reg: REG, confirm: CONFIRM }
+        data:
+            label: Event data
+        ip:
+            label: IP
+        date:
+            label: Date

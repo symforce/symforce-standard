@@ -1,0 +1,410 @@
+{# src/Acme/DemoBundle/Resources/views/Form/fields.html.twig #}
+{% extends 'form_div_layout.html.twig' %}
+
+{% macro macro_authorize_configure(full_name, value, admin_name, children) %}
+    {% set admin = app_admin(admin_name) %}
+    <fieldset>
+        <legend>{{ admin.label }}</legend>
+            
+        <div class="app_authorize_dl">
+            <label class="app_authorize_dt">
+                <input type="checkbox" name="{{ full_name }}[{{ admin_name }}]" value="1" {% if value[admin_name]['action'] is defined %} checked="checked" {% endif %} />
+                {{ 'form.authorize.actions' |trans }}
+            </label>
+            {% for action_name, action in admin.actions %}
+                <label class="app_authorize_input" name="app_authorize_action_{{ action_name }}">
+                    <input type="checkbox" name="{{ full_name }}[{{ admin_name }}][action][{{ action_name }}]" value="1" {% if value[admin_name]['action'][action_name] is defined %} checked="checked" {% endif %} />
+                    {{ action.label }}
+                </label>
+            {% endfor %}
+        </div>
+        
+        {% if admin.hasOwner() %}
+            <div class="app_authorize_owner app_authorize_node">
+                <div class="app_authorize_dl">
+                    <label class="app_authorize_dt">
+                          <input type="checkbox" name="{{ full_name }}[{{ admin_name }}][owner]" value="1" {% if value[admin_name]['owner'] is defined %} checked="checked" {% endif %} />
+                          {{ 'form.owner' | trans }}
+                    </label>
+                    {% for action_name, action in admin.actions %}
+                        {% if action.isOwnerAction() %}
+                        <label class="app_authorize_input" name="app_authorize_action_{{ action_name }}">
+                            <input type="checkbox" name="{{ full_name }}[{{ admin_name }}][owner][{{ action_name }}]" value="1" {% if value[admin_name]['owner'][action_name] is defined %} checked="checked" {% endif %} />
+                            {{ action.label }}
+                        </label>
+                        {% endif %}
+                    {% endfor %}
+                </div>       
+            </div>       
+        {% endif %}
+            
+        {% if admin.auth_properties %}
+            <div class="app_authorize_properties app_authorize_node">
+                <label class="app_authorize_dt app_authorize_title">
+                    <input type="checkbox" name="{{ full_name }}[{{ admin_name }}][property]" value="1" {% if value[admin_name]['property'] is defined %} checked="checked" {% endif %} />
+                    {{ 'form.authorize.properties' |trans }}
+                </label>
+            {% for property_name in admin.auth_properties %}
+                   <div class="app_authorize_dl">
+                            <label class="app_authorize_dt">
+                                 <input type="checkbox" name="{{ full_name }}[{{ admin_name }}][property][{{ property_name }}]" value="1" {% if value[admin_name]['property'][property_name] is defined %} checked="checked" {% endif %} />
+                                 {{ admin.getPropertyLabel(property_name) }}
+                            </label>
+
+                            {% for action_name, action in admin.actions %}
+                                 {% if action.isPropertyAction() %}
+                                    <label class="app_authorize_input">
+                                        <input type="checkbox" name="{{ full_name }}[{{ admin_name }}][property][{{ property_name }}][{{ action_name }}]" value="1" {% if value[admin_name]['property'][property_name][action_name] is defined %} checked="checked" {% endif %} />
+                                        {{ action.label }}
+                                    </label>
+                                    {% if action.isFormAction() %}
+                                        <label class="app_authorize_readonly_input">
+                                            <input type="checkbox" name="{{ full_name }}[{{ admin_name }}][property][{{ property_name }}][{{ action_name }}]" value="2" {% if value[admin_name]['property'][property_name][action_name] is defined and 2 == value[admin_name]['property'][property_name][action_name] %}  checked="checked" {% endif %} />
+                                            {{ 'form.authorize.readonly' | trans({ '%action%' : action.label }) }}
+                                        </label>
+                                    {% endif %}
+                                {% endif %}
+                             {% endfor %}
+                     </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% if admin.workflow %}
+            <div class="app_authorize_workflow app_authorize_node">
+                <label class="app_authorize_dt app_authorize_title">
+                   <input type="checkbox" name="{{ full_name }}[{{ admin_name }}][workflow]" value="1" {% if value[admin_name]['workflow'] is defined %} checked="checked" {% endif %} />
+                   {{ 'form.workflow' | trans }}
+                </label>
+                {% for workflow_name, status in admin.workflow.status %}
+                    {% if not(status.internal) %}
+                         <div class="app_authorize_workflow_node"><!-- workflow node -->
+                         
+                         <div class="app_authorize_dl">
+                              <label class="app_authorize_dt">
+                                <input type="checkbox" name="{{ full_name }}[{{ admin_name }}][workflow][{{ workflow_name }}][action]" value="1" {% if value[admin_name]['workflow'][workflow_name]['action'] is defined %} checked="checked" {% endif %} />
+                                {{ admin.getStatusLabelByName(workflow_name) }} 
+                              </label>
+                                {% for action_name, action in admin.actions %}
+                                     {% if action.isWorkflowAction() or (action.isDeleteAction() and status['target'] and ('removed' in status['target']) ) %}
+                                        <label class="app_authorize_input">
+                                            <input type="checkbox" name="{{ full_name }}[{{ admin_name }}][workflow][{{ workflow_name }}][action][{{ action_name }}]" value="1" {% if value[admin_name]['workflow'][workflow_name]['action'][action_name] is defined %} checked="checked" {% endif %} />
+                                            {{ action.label }}
+                                        </label>
+                                        {% if action.isFormAction() %}
+                                            <label class="app_authorize_readonly_input">
+                                                <input type="checkbox" name="{{ full_name }}[{{ admin_name }}][workflow][{{ workflow_name }}][action][{{ action_name }}]" value="2" {% if value[admin_name]['workflow'][workflow_name]['action'][action_name] is defined and 2 == value[admin_name]['workflow'][workflow_name]['action'][action_name] %} checked="checked" {% endif %} />
+                                                {{ 'form.authorize.readonly' | trans({ '%action%' : action.label }) }}
+                                            </label>
+                                        {% endif %}
+                                    {% endif %}
+                                 {% endfor %}
+                         </div>
+                            
+                            {% if admin.workflow_auth_permertions[workflow_name]  is defined  %}
+                                 
+                                 {% if admin.workflow_auth_permertions[workflow_name]['properties'] is defined  %}
+                                       <div class="app_authorize_workflow_properties">
+                                            <div class="app_authorize_dl">
+                                                 <label class="app_authorize_dt">
+                                                        <input type="checkbox" name="{{ full_name }}[{{ admin_name }}][workflow_properties][{{ workflow_name }}]" value="1" {% if value[admin_name]['workflow_properties'][workflow_name] is defined %} checked="checked" {% endif %} />
+                                                         {{ 'form.authorize.properties' |trans }}
+                                                 </label>
+                                                 {% for property in admin.workflow_auth_permertions[workflow_name]['properties'] %}
+                                                     <label class="app_authorize_input">
+                                                         <input type="checkbox" name="{{ full_name }}[{{ admin_name }}][workflow_properties][{{ workflow_name }}][{{ property }}]" value="1" {% if value[admin_name]['workflow_properties'][workflow_name][property] is defined %} checked="checked" {% endif %} />
+                                                         {{ property }}
+                                                     </label>
+                                                 
+                                                 <label class="app_authorize_readonly_input">
+                                                     <input type="checkbox" name="{{ full_name }}[{{ admin_name }}][workflow_properties][{{ workflow_name }}][{{ property }}]" value="1" {% if value[admin_name]['workflow_properties'][workflow_name][property] is defined and 2 == value[admin_name]['workflow_properties'][workflow_name][property] %} checked="checked" {% endif %} />
+                                                     {{ 'form.authorize.readonly' | trans({ '%action%' : property }) }}
+                                                </label>
+                                                 {% endfor %}
+                                             </div>
+                                        </div>
+                                 {% endif %}
+                                 
+                                 {% if admin.workflow_auth_permertions[workflow_name]['children']  is defined  %}
+                                        <div class="app_authorize_workflow_children">
+                                                {% for child_name, child_config in admin.workflow_auth_permertions[workflow_name]['children'] %}
+                                                        {% set child = app_admin(child_name) %}
+                                                        <div class="app_authorize_dl">
+                                                            <label class="app_authorize_dt">
+                                                                <input type="checkbox" name="{{ full_name }}[{{ admin_name }}][workflow_children][{{ workflow_name }}][{{ child_name }}]" value="1" {% if value[admin_name]['workflow_children'][workflow_name][child_name] is defined %} checked="checked" {% endif %} />
+                                                                {{ child.label }}
+                                                            </label>
+                                                            {% for action_name in child_config %}
+                                                                    {% set action = child.getAction(action_name) %}
+                                                                    <label class="app_authorize_input">
+                                                                        <input type="checkbox" name="{{ full_name }}[{{ admin_name }}][workflow_children][{{ workflow_name }}][{{ child_name }}][{{ action_name }}]" value="1" {% if value[admin_name]['workflow_children'][workflow_name][child_name][action_name] is defined %} checked="checked" {% endif %} />
+                                                                        {{ action.label }}
+                                                                    </label>
+                                                            {% endfor %}
+                                                        </div>
+                                                {% endfor %}
+                                      </div>
+                                 {% endif %}
+                                 
+                            {% endif %}
+
+                        </div> <!-- /workflow node --> 
+                    {% endif %}
+                {% endfor %}
+                
+            </div>
+        {% endif %}
+            
+    </fieldset>
+
+
+
+    {% if children %}
+        {% for child_name, child_children in children %}
+                {{ _self.macro_authorize_configure(full_name, value, child_name, child_children ) }}
+        {% endfor %}
+    {% endif %}
+
+{% endmacro %} 
+
+{% block appauthorize_widget %}
+    {% spaceless %}
+        <div id="{{ id }}" class="authorize_form_box">
+        {% for admin_name, admin_children in admin_tree %}
+                {{ _self.macro_authorize_configure(full_name, value, admin_name, admin_children ) }}
+        {% endfor %}
+        </div>
+        <div class="btn-group btn-group-xs" style="margin:8px 0px;">
+            {% set tr_path = "form." ~ name ~ ".select_all" %}
+            <button id="app_authorize_select_all" type="button" class="btn btn-default">{{ tr_path |trans }}</button>
+            {% set tr_path = "form." ~ name ~ ".cancel_all" %}
+            <button id="app_authorize_cancel_all" type="button" class="btn btn-default">{{ tr_path |trans }}</button>
+            {% set tr_path = "form." ~ name ~ ".default_value" %}
+            <button id="app_authorize_default_value" type="button" class="btn btn-default">{{ tr_path |trans }}</button>
+         </div>
+        
+        <script type="text/javascript">
+            (function($, box_id ){
+                
+                var box = $('#' + box_id ) ;
+              
+                $('#app_authorize_select_all').click(function(){
+                    box.find('input').each(function(){
+                        if( !$(this).closest('.app_authorize_owner').get(0) && !$(this).closest('label').hasClass('app_authorize_readonly_input') ) {
+                            this.checked    = true ;
+                        } else {
+                            this.checked    = false ;
+                        }
+                    });
+                });
+                
+                $('#app_authorize_cancel_all').click(function(){
+                    box.find('input').each(function(){
+                        this.checked    = false ;
+                    });
+                });
+                
+                $('#app_authorize_default_value').click(function(){
+                    box.find('input').each(function(){
+                        this.checked    = this.defaultChecked ;
+                    });
+                });
+                
+                box.find('input').click(function(){
+                    $(this).trigger( "app_click");
+                });
+                
+                
+                // handle readonly
+                box.find('.app_authorize_readonly_input').each(function(i){
+                    var readonly    = $(this).find('input').get(0) ;
+                    var input   = $(this).prev('label').find('input').get(0) ;
+                    $(input).on("app_click", function(evt){
+                        if( !this.checked ) {
+                            readonly.checked = false ;
+                        }
+                    });
+                    $(readonly).on("app_click", function(evt){
+                        if( this.checked ) {
+                            input.checked = true ;
+                        }
+                    });
+                });
+                
+                // handle box title  
+                box.find('.app_authorize_title input').each(function(title_index){
+                    var title = this ;
+                    var children  = $(this).closest('div').find('.app_authorize_dt input').toArray() ;
+                    for(var i = children.length; i--; ) {
+                        if( children[i] === this || $(children[i]).closest('.app_authorize_workflow_properties').get(0) || $(children[i]).closest('.app_authorize_workflow_children').get(0) ) { 
+                            children.splice(i, 1); 
+                            continue ;
+                        }
+                        
+                    }
+                    
+                    var iTimer  = null ;
+                    $(title).on("app_click", function(evt){
+                        if( iTimer ) {
+                            clearTimeout(iTimer);
+                            iTimer  = null ;
+                        }
+                        if( !this.checked ) {
+                            $.each(children, function() {
+                                if( this.checked  ) {
+                                    this.checked = false ;
+                                    $(this).trigger( "app_click" ) ;
+                                }
+                            })
+                            return ;
+                        }
+                        $.each(children, function() {
+                            if( !$(this).closest('label').hasClass('app_authorize_readonly_input') ) {
+                                if( !this.checked  ) {
+                                    this.checked = true ;
+                                    $(this).trigger("app_click") ;
+                                }
+                            }
+                        }) ;
+                    });
+                    
+                    function checkall() {
+                        if( iTimer ) {
+                            clearTimeout(iTimer);
+                            iTimer  = null ;
+                        }
+                        var checked = false ;
+                        for(var i = children.length; i--; ) {
+                            if( children[i].checked ) {
+                                checked = true ;
+                                break ;
+                            }
+                        }
+                        title.checked   = checked ;
+                    }
+                    
+                    $.each(children, function() {
+                       $(this).on("app_click", function(evt){
+                           iTimer   = setTimeout( checkall, 10);
+                       });
+                    });
+                });
+                
+                // handle title  
+                box.find('.app_authorize_dt input').each(function(title_index){
+                    if( $(this).closest('label').hasClass('app_authorize_title') ) {
+                        return ;
+                    }
+                    var title = this ;
+                    var children  = $(this).closest('.app_authorize_dl').find('input').toArray() ;
+                    for(var i = children.length; i--; ) {
+                        if( children[i] === this ) { 
+                            children.splice(i, 1); 
+                            continue ;
+                        }
+                    }
+                    var owner   = $(this).closest('.app_authorize_owner').get(0) ;
+                    var owner_children  = null ;
+                    if( owner ) {
+                        owner_children  = Array( children.length ) ;
+                        (function(){
+                            var es = $(owner).prev('.app_authorize_dl').find('.app_authorize_input input').toArray() ;
+                            $.each(children, function(i){
+                               var action   = $(this).closest('label').attr('name') ;
+                               for(var j = es.length; j--; ) {
+                                   if( action === $(es[j]).closest('label').attr('name')  ) {
+                                       owner_children[i]    = es[j] ;
+                                   }
+                               }
+                            });
+                        })();
+                        
+                        $.each(owner_children, function(i){
+                            $(this).on("app_click", function(evt){
+                                if( this.checked ) {
+                                    if( children[i].checked ) {
+                                        children[i].checked = false ;
+                                        $(children[i]).trigger( "app_click") ;
+                                    }
+                                }
+                            });
+                        });
+
+                        $.each(children, function(i){
+                            $(this).on("app_click", function(evt){
+                                if( this.checked ) {
+                                    if( owner_children[i].checked ) {
+                                        owner_children[i].checked = false ;
+                                        $(owner_children[i]).trigger( "app_click") ;
+                                    }
+                                }
+                            });
+                        });
+                    }
+                    
+                    var iTimer  = null ;
+                    var disableTimer  = null ;
+                    $(title).on("app_click", function(evt){
+                        if( disableTimer ) {
+                            return ;
+                        }
+                        disableTimer  = setTimeout(function(){
+                            disableTimer   = null ;
+                        }, 100);
+                        
+                        if( iTimer ) {
+                            clearTimeout(iTimer);
+                            iTimer  = null ;
+                        }
+                        
+                        if( !this.checked ) {
+                            $.each(children, function() {
+                                this.checked = false ;
+                                $(this).trigger("app_click") ;
+                            })
+                            return ;
+                        }
+                        $.each(children, function() {
+                            if( !$(this).closest('label').hasClass('app_authorize_readonly_input') ) {
+                                this.checked = true ;
+                                $(this).trigger("app_click") ;
+                            }
+                        }) ;
+                    });
+                    
+                    function checkall() {
+                        if( iTimer ) {
+                            clearTimeout(iTimer);
+                            iTimer  = null ;
+                        }
+                        var checked = false ;
+                        console.log('check all') ;
+                        for(var i = children.length; i--; ) {
+                            if( children[i].checked ) {
+                                checked = true ;
+                                break ;
+                            }
+                        }
+                        if( title.checked != checked ) {
+                            title.checked  = checked ;
+                            $(title).trigger("app_click") ;
+                        }
+                    }
+                    
+                    $.each(children, function() {
+                       $(this).on("app_click", function(evt){
+                           if( disableTimer ) {
+                               return ;
+                           }
+                           disableTimer  = setTimeout(function(){
+                                disableTimer   = null ;
+                           }, 100);
+                           iTimer   = setTimeout( checkall, 10);
+                       });
+                    });
+                });
+                
+            })(jQuery, '{{ id }}');
+        </script>
+    {% endspaceless %}
+{% endblock %}

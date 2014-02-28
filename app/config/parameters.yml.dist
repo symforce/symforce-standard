@@ -1,0 +1,29 @@
+parameters:
+    database_driver:   pdo_mysql
+    database_host:     127.0.0.1
+    database_port:     ~
+    database_name:     myapp_demo
+    database_user:     root
+    database_password: ~
+
+    mailer_transport:  smtp
+    mailer_host:       127.0.0.1
+    mailer_port: 25
+    mailer_user:       ~
+    mailer_password:   ~
+    mailer_delivery_address: dev@example.com
+    mailer_sender_address: %mailer_delivery_address%
+    mailer_sender_name: %app.admin.brand%
+
+    locale:            en
+    secret:            ThisTokenIsNotSoSecretChangeIt
+
+    java_path: "/usr/bin/java"
+    node_path: "/usr/bin/node"
+    node_paths: [ "/usr/lib/node_modules/" ] 
+    assetic_bundles: [ "AppAdminBundle", "AppUserBundle", "AppWebBundle", "FOSMessageBundle", "FOSUserBundle" ]
+    app.admin.brand: "New Brand"
+    app.admin.title: "New Brand Admin Panel"
+    web_app_user:  git
+    web_app_group: git
+    app.version: 0 

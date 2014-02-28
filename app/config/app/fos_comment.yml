@@ -1,0 +1,38 @@
+framework:
+    http_method_override: true
+    
+fos_comment:
+    db_driver: orm
+    class:
+        model:
+            comment: App\UserBundle\Entity\Comment
+            thread: App\UserBundle\Entity\CommentThread
+            vote: App\UserBundle\Entity\CommentVote
+    acl: true
+    
+    service:
+        acl:
+            thread:  fos_comment.acl.thread.roles
+            comment: fos_comment.acl.comment.roles
+            vote:    fos_comment.acl.vote.roles
+        manager:
+            thread:  fos_comment.manager.thread.acl
+            comment: fos_comment.manager.comment.acl
+            vote:    fos_comment.manager.vote.acl
+            
+    acl_roles:
+            comment:
+                create: IS_AUTHENTICATED_ANONYMOUSLY
+                view: IS_AUTHENTICATED_ANONYMOUSLY
+                edit: ROLE_ADMIN
+                delete: ROLE_ADMIN
+            thread:
+                create: IS_AUTHENTICATED_ANONYMOUSLY
+                view: IS_AUTHENTICATED_ANONYMOUSLY
+                edit: ROLE_ADMIN
+                delete: ROLE_ADMIN
+            vote:
+                create: IS_AUTHENTICATED_ANONYMOUSLY
+                view: IS_AUTHENTICATED_ANONYMOUSLY
+                edit: ROLE_ADMIN
+                delete: ROLE_ADMIN

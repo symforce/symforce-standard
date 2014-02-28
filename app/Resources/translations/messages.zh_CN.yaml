@@ -1,0 +1,12 @@
+form:
+    optional: (可选)
+    owner: 拥有者授权
+    workflow: 工作流授权
+    authorize:
+        autohide: 自动隐藏
+        readonly: %action%写保护
+        properties: 动态表单授权
+        actions: 动作授权
+        select_all: 全部选择
+        cancel_all: 全部取消
+        default_value: 默认 

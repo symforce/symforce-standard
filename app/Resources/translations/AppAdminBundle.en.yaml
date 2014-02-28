@@ -1,0 +1,147 @@
+app:
+    admin:
+        dashboard: DashBoard
+    
+    action:
+        list: 
+            label: List
+            action_label: %admin% List
+        create: 
+            label: Create 
+            action_label: Create %admin%
+            title_label: Create %admin%
+            form_label: Create %admin%
+            finish: Create `%object%` successfully
+        update: 
+            label: Edit 
+            action_label: Edit %admin%
+            title_label: Edit %admin% `%object%`
+            form_label: Edit %admin% `%object%`
+            finish: Update `%object%` successfully
+        delete: 
+            label: Delete 
+            action_label: Delete %admin%
+            title_label: Delete %admin% `%object%`
+            form_label: Are you sure to delete %object% ?
+            finish: Delete `%object%` successfully
+            error:
+                child: Can not delete %admin%, because it has %count% %child% object
+        view:
+            label: View
+            action_label: View %admin%
+            title_label: View %admin% `%object%`
+            form_label: View %admin% `%object%`
+            action_label: View %admin% `%object%` 
+        search:
+            label: Search
+            action_label: Search %admin%
+            title_label: Search %admin%
+        batch:
+            label: Batch
+            action_label: Batch
+            title_label: Batch
+        page:
+            label: Edit Page
+            action_label: Edit %admin% Page
+            title_label: Edit %admin% `%object%` Page
+    form:
+        captcha:
+            label: Captcha
+            reload: Reload
+        choices:
+            yesno: { yes: Yes, no: No } 
+        file:
+            error: 
+                type: 只允许文件类型 @{types}, 您选择了 `@{file}`
+                size: 您选择的文件尺寸 @{size} 大于 @{max_size} 
+    profile:
+        welcome: Welcome, %username%
+        logout: Logout
+
+    login:
+        label:  Please Login
+        username: 
+            label: Username
+            placeholder: Username or Email
+        password:  
+            label: Password
+        signin: 
+            label: Login
+        remembme: 
+            label: Remembe me
+            resetting: <a href="%url%">Forget Password?</a>
+        error:
+            credentials: Username or Password error
+            captcha: Captcha code error
+            disabled: User disabled
+ 
+    breadcrumb:
+        child: %parent%-%admin% List
+
+    filemanager:
+        title: File Manager
+        empty: Empty
+    tree:
+        root: %admin% Root
+        child: Children
+        create:
+            title: Create %object% child %admin%
+    status:
+     all:
+         label: All
+         list: All %admin%
+    property:
+        email:
+            label: Email
+        roles:
+            label: Roles
+        enabled:
+            label: Enabled
+        password:
+            label: Password
+        name:
+            label: Name
+        slug:
+            label: Slug
+        file:
+            label: File
+        description:
+            label: Description
+        updated:
+            label: Updated date
+        id:
+            label: Id
+        created:
+            label: Created date
+        image:
+            label: Image
+        title:
+            label: Title
+        keywords:
+            label: Keywords
+        order_by:
+            label: Order by
+        contact:
+            label: Contact
+        phone:
+            label: Phone
+        content:
+            label: Content
+        help_doc:
+            label: Help Document
+        position:
+            label: Position
+        vacancies:
+            label: Vacancies
+        details:
+            label: Details
+        category:
+            label: Category
+        url:
+            label: Url
+        type:
+            label: Type
+        user_group:
+            label: User Group
+app_page:
+    label: Page

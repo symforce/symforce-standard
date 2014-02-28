@@ -1,0 +1,11 @@
+mopa_bootstrap:
+    menu: ~ 
+    form: 
+        horizontal_label_class: col-xs-3
+        horizontal_label_offset_class: col-xs-offset-3
+        horizontal_input_wrapper_class: col-xs-9
+        collection:
+            widget_remove_btn:
+                icon: trash
+            widget_add_btn:
+                icon: plus-sign

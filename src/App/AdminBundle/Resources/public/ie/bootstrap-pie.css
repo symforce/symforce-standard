@@ -1,0 +1,46 @@
+.img-rounded,
+.img-circle,
+.table-bordered,
+.form-control,
+.panel,
+.well,
+.nav-tabs > li > a,
+.nav-pills > li > a,
+.navbar,
+.navbar-nav > li > a,
+.navbar-toggle,
+.navbar-toggle .icon-bar,
+.breadcrumb,
+.pagination,
+.pager li > a,.pager li > span,
+.modal-content,
+.tooltip-inner,
+.popover,
+.popover-title,
+.alert,
+.thumbnail,.img-thumbnail,
+.label,
+.badge,
+.progress,
+.accordian-group,
+.carousel-indicators li,
+.jumbotron,
+
+/*
+.dropdown-menu,
+*/
+
+li.last_child,
+li.first_child,
+li.first_last_child,
+.btn.last_child,
+.btn.first_child,
+.btn.first_last_child,
+.btn_pie,
+.app_form_input,
+.app-addon,
+.input-group-addon
+{
+    behavior:url(/bundles/appadmin/ie/css3pie/PIE.htc);
+    position: relative;
+}

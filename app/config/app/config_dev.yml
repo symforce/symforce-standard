@@ -1,0 +1,6 @@
+imports:
+    #- { resource: xhprof.yml }
+    
+ 
+gregwar_captcha:
+    bypass_code: a

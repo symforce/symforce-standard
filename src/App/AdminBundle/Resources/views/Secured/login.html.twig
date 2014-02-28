@@ -1,0 +1,35 @@
+{% extends 'AppAdminBundle::layout.html.twig' %}
+
+{% block body %}
+
+ <div class="container">                
+     
+    <div class="col-xs-6 col-xs-offset-3">
+    {% block content %}
+        
+        <form action="{{ path( 'app_admin_check' ) }}" class="form-horizontal" method="post" id="login_form" >
+            
+            {{ form_widget(form) }}
+            
+            <div class="form-group">
+                <div class="col-xs-offset-3 col-xs-9">
+                    <input type="submit" name="_submit" value="{{ 'app.login.signin' | trans({}, app_domain ) }}" class="btn btn-primary" />
+                </div>
+            </div>
+        </form>
+
+         <script type="text/javascript">
+        $(function(){
+            new FormValidator('#login_form', {
+                'url': '{{ path('app_admin_login') }}' ,
+                'elements': '.captcha_input input'
+            }) ;
+        });
+        </script>
+
+    {% endblock %}
+
+</div><!-- /content --> 
+</div><!-- /container --> 
+{% endblock %}
+

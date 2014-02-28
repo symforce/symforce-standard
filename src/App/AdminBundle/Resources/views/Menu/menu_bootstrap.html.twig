@@ -1,0 +1,25 @@
+{% extends "knp_menu.html.twig"  %}
+ 
+{% block label %}
+    {% if item.getExtra('icon', false) %} <i class="icon-{{ item.getExtra('icon') }}"></i> {% endif %}
+    {{ item.label|trans(item.getExtra('translation_params', {}), item.getExtra('translation_domain', 'messages')) }}
+    {% if item.getExtra('caret', false) %} <b class="caret"></b>{% endif %}
+{% endblock %}
+  
+{#
+
+{% block item %}
+{% if item.displayed %}
+    {% if item.getExtra('before_divider', false ) %}
+        <li class="divider"></li>
+    {% endif %}
+            
+        {{ parent() }}
+            
+    {% if item.getExtra('after_divider', false ) %}
+        <li class="divider"></li>
+    {% endif %}
+{% endif %}
+{% endblock %}
+
+#}

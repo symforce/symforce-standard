@@ -1,0 +1,40 @@
+<div class="navbar navbar-inverse navbar-fixed-top">
+ 
+      <div class="container">
+              
+              <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse" >
+                  <span class="sr-only">Toggle navigation</span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand" href="{{ path( app_param('app.admin.route.brand_path') ) }}">{% block brand_text %}{{ 'app.admin.brand'|trans({},  app_domain ) }}{% endblock %}</a>
+              </div><!--/navbar-header -->
+              
+      <div class="collapse navbar-collapse navbar-responsive-collapse">
+        {% block profile %}
+          <ul class="nav navbar-nav pull-right"> 
+            {% if app.user %}
+                <li class="first"><p class="navbar-text" style="padding-right: 10px;">{{ 'app.profile.welcome'|trans({'%username%': app.user.username }, app_domain  )|raw }}</li>
+           
+                <li><a href="{{ path( app_param('app.admin.route.logout_path') ) }}"><i class="icon-off"></i> {{ 'app.profile.logout'|trans({}, app_domain ) }}</a></li>
+            {% endif %}
+            <li class="last">
+                <p>
+                    {% include "AppAdminBundle:Locale:locale.html.twig" with {'form': app_locale_form(app.request) } %}
+                </p>
+            </li>
+          </ul>
+        {% endblock %}
+        
+        {% if app.user %}
+            {% block menu %}
+              {{ knp_menu_render( 'admin', { 'currentClass': 'active' } ) }}
+            {% endblock %}
+        {% endif %}
+        
+      </div><!--/.nav-collapse -->
+    </div><!--/.container -->
+    
+</div><!--/.navbar -->

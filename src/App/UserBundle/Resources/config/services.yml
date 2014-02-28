@@ -1,0 +1,19 @@
+# This file is auto-generated during the composer install
+
+services:
+    
+    app.fos_user.listener:
+        class: App\UserBundle\Listener\FosUserSubscriber
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name:"kernel.event_subscriber" }
+    
+    app.form.type.authorize:
+        class: App\UserBundle\Form\Type\AuthorizeType
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type, alias: appauthorize }
+    
+    

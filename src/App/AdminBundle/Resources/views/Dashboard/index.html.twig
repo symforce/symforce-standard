@@ -1,0 +1,63 @@
+{% extends "AppAdminBundle::layout.html.twig" %}
+
+{% macro render_dashboard_admin(group_name, group, app_domain) %}
+    {% set group_children = group.getChildren() %}
+    {% if group_children|length > 0 %}
+    <table class="table table-bordered">
+        <caption> {{ group.label | trans({}, app_domain )  }} </caption>
+        {% for entity_name, item in group_children %}
+            {% if app_auth(entity_name) %}
+                {% set admin = app_admin(entity_name) %}
+                    <tr>
+                        <td> 
+                            {% if item.icon %}
+                                <i class="icon-{{ item.icon }}"></i>
+                            {% endif %}
+                            {{ admin.label }}
+                        </td> 
+                        <td width="40%">
+                            {% for action in item.actions %}
+                                   {% if admin.auth(action.name) %}
+                                       <a href="{{ admin.path(action.name ) }}">{{ action.label | trans({}, action.domain ) }}</a>
+                                   {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+    {% endif %}
+{% endmacro %} 
+
+
+{% block content %}
+
+   <div class="row-fluid">
+    <div class="col-xs-6">
+        {% for group_name, group in dashboard_groups %}
+        {# if not(group.rightside) #}
+            {{ _self.render_dashboard_admin(group_name, group, app_domain)}}
+        {# endif #}
+        {% endfor %}
+    </div>
+    <div class="col-xs-6">
+        {% if duty_tasks|length > 0 %}
+        <table class="table table-bordered">
+            <caption>待办任务</caption>
+            {% for admin_name, steps in duty_tasks %}
+                {% set admin = app_admin(admin_name) %}
+                <tr>
+                    <td>
+                        {{ admin.label }}:
+                        {% for step_name, count in steps%}
+                            <a style="color:#f00;" href="{{ admin.path('list', null, { "admin_route_workflow": step_name }) }}">{{ admin.getStatusLabelByName(step_name) }} ({{ count }})</a>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+    </div>
+   </div>
+  
+{% endblock %}

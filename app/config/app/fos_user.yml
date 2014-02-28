@@ -1,0 +1,18 @@
+
+fos_user:
+    db_driver: orm
+    use_listener: false
+    firewall_name: main
+    user_class: App\UserBundle\Entity\User
+    group:
+        group_class: App\UserBundle\Entity\Group
+    from_email:
+        address:        %mailer_sender_address%
+        sender_name:    %mailer_sender_name%
+    registration:
+        confirmation:
+            enabled:    true
+        form:
+            # type: app_user_registration
+    service:
+        #user_manager: app.user.manager

@@ -1,0 +1,24 @@
+
+parameters:
+    mopa_bootstrap.form.templating: "AppAdminBundle:Form:fields.html.twig"
+
+app_admin:
+    language:
+        en: English
+        zh_CN: 简体中文
+        
+    menu:
+        groups:
+            # sys: { label: "Base Menu", icon:"flag" }
+            admin_group: { label: "System Menu", icon:"flag" }
+              # home: { parent:sys, label:"Home", icon:"star" , divider:false, route:"_cmf_home" }
+              
+    dashboard:
+        groups:
+            default: { label: "#", right_side:false }
+            right: { label: "#", right_side:true }
+            public: { label: "#", right_side:true }
+              
+    form:
+        type: 
+            authorize: App\UserBundle\Form\MetaType\AuthorizeMetaType

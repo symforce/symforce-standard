@@ -1,0 +1,8 @@
+# port install graphviz 
+jns_xhprof:
+    # location_lib:     /opt/local/www/php55-xhprof/xhprof_lib/utils/xhprof_lib.php
+    # location_runs:    /opt/local/www/php55-xhprof/xhprof_lib/utils/xhprof_runs.php
+    # location_config: /opt/local/lib/php55/include_path/xhprof_lib/config.php
+    location_web:    http://127.0.0.1:8080/debug/xhprof_html/
+    enabled:         true
+    exclude_patterns: [ '/bundles/' ]

@@ -1,0 +1,413 @@
+{% extends "MopaBootstrapBundle:Form:fields.html.twig"  %}
+{# extends 'form_div_layout.html.twig' #}
+
+{% block label_asterisk %}
+{% if required %}
+    {%- if render_required_asterisk %} <span class="asterisk">*</span>{% endif %}
+{% else %}
+    {%- if render_optional_text %} <span class="form_optional">{{ "form.optional"|trans }}</span>{% endif %}
+{% endif %}
+{% endblock label_asterisk %}
+    
+    
+{# Widgets #}
+
+{% block form_widget_simple %}
+{% spaceless %}
+    {% set type = type|default('text') %}
+    {% if type != 'hidden' and ( widget_addon_prepend|default(null) is not null or widget_addon_append|default(null) is not null ) %}
+    <div class="input-group">
+        
+    {% endif %}
+    {% if not widget_remove_btn|default(null) %}
+        {% set attr = attr|merge({'class': attr.class|default('') ~ ' not-removable'}) %}
+    {% endif %}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' ' ~ widget_form_control_class}) %}
+    {# replace parent() #}
+            {% if widget_addon_prepend|default(null) is not null %}
+                {% set widget_addon = widget_addon_prepend %}
+                {{ block('widget_addon') }}
+            {% endif %}
+            {% if input_width < 100 %}
+                {% set attr = attr|merge({'style':  'width:' ~ input_width ~ '%; display:inline-block; ' ~ attr.style|default('')  }) %}
+            {% endif %}
+            <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %} />
+         
+         {% if inline_help %}
+            <span class="form_inline_help">{{ inline_help | raw }}</span>
+         {% endif %}
+    {# end parent() #}
+    {% if type != 'hidden' and ( widget_addon_prepend|default(null) is not null or widget_addon_append|default(null) is not null ) %}
+        {% if widget_addon_append|default(null) is not null %}
+        {% set widget_addon = widget_addon_append %}
+        {{ block('widget_addon') }}
+        {% endif %}
+    </div>
+    {% endif %}
+    {% if type != 'hidden' and horizontal %}
+        {{ block('form_message') }}
+    {% endif %}
+{% endspaceless %}
+{% endblock form_widget_simple %}
+
+{# app form type #}
+        
+{% block appgroup_widget %}
+    <fieldset>
+        <legend>{{ label }}</legend>
+        {{ block('form_rows_visible') }}
+    </fieldset>
+{% endblock %}
+
+        
+{% block appcolor_widget %}
+    
+    {% spaceless %}
+            <div class="input-group">
+                <input {{ block('widget_attributes') }} value="{{ value }}" >
+                <span class="input-group-addon" style="margin-top:1px;background-color:{{ value }}"></span>
+            </div>
+    {% endspaceless %}
+
+    {% block appcolor_javascripts %}
+        <script type="text/javascript">
+            $('#{{ id }}').colorpicker().on('changeColor', function(ev){
+                $( this ).next().css( 'background-color', ev.color.toHex() );
+            });
+        </script>
+    {% endblock %}
+        
+{% endblock %}
+
+
+{% block appdatetime_widget %}
+    
+    {% spaceless %}
+            <div class="input-group">
+                <input {{ block('widget_attributes') }} value="{{ value }}" >
+                <span class="input-group-addon">
+                    <i class="fa fa-clock-o"></i>
+                </span>
+            </div>
+    {% endspaceless %}
+
+    {% if horizontal %}
+        {{ block('form_message') }}
+    {% endif %}
+        
+    {% block appdatetime_javascripts %}
+        <script type="text/javascript">
+            (function(id, type, format, language ){
+                var events = {} ;
+                var options = {
+                    autoclose: true ,
+                    language: language ,
+                    format: format 
+                } ;
+                var fn  = null ;
+                if ( 'datetime' === type ) {
+                    fn  = 'datetimepicker' ;
+                    options['showMeridian']    = true ;
+                    options['todayBtn']    = true ;
+                } else if( 'date' === type ) {
+                    fn  = 'datepicker' ;
+                    options['todayBtn']    = 'linked' ;
+                    // options['todayHighlight']    = true ;
+                    // options['calendarWeeks'] = true ;
+                } else if ( 'time' === type ) {
+                    fn  = 'timepicker' ;
+                }
+                if( options['language'] == 'en_US' ) {
+                    delete options['language'] ;
+                } 
+                var obj  = $(id)[fn](options) ;
+                for(var ev in events) if ( events.hasOwnProperty(ev) ) {
+                    obj.on(ev, events[ev]);
+                }
+            })('#{{ id }}', '{{ datetime_picker }}', "{{ app_picker_format(datetime_format, datetime_picker )  }}", '{{ app.request.locale }}' );
+            
+        </script>
+    {% endblock %}
+{% endblock %}
+
+{% block appimage_widget %}
+{% spaceless %}
+<div class="{{ horizontal_input_wrapper_class }}">
+    <div class="app_form_file_box app_form_image_box app_form_image_hidden">
+        <input type="hidden" value="{{ value.url }}" id="{{ id }}" name="{{ full_name }}[url]" />
+        <input type="hidden" value="" name="{{ full_name }}[crop]" />
+        <input type="file" class="app_form_file_handle" />
+        <div class="app_form_file_view">
+            <div class="app_form_image_box" style="width:{{ img.width }}px;"><img src="" /></div>
+            <div class="app_form_image_tools">
+                <a class="app_form_image_tools_item app_form_image_adjust">调整</a>
+                {#
+                            <a class="app_form_image_tools_item app_form_image_delete">删除</a>
+                            <a class="app_form_image_tools_item app_form_image_default">默认</a>
+            #}
+            </div>
+            图片尺寸: {{ img.width }}x{{ img.height }}
+        </div>
+    </div>
+</div>
+{% endspaceless %}
+{% block appimage_javascripts %}
+<script type="text/javascript">
+    new AppFormFile( $('#{{ id }}'), {
+        value: {{ value | json_encode | raw }} ,
+        types: '{{ accept_file_type }}',
+        max: {{ max_file_size }} ,
+        id: '{{ attribute(form.parent.vars.value, admin_id )  | number_format  }}' ,
+        url: '{{ path( 'app_upload_save', { "admin_name": admin_name , "field_name": name }) }}' ,
+        type_error: '{{ 'app.form.file.error.type' | trans({}, app_param('app.admin.domain') ) }}' ,
+        size_error: '{{ 'app.form.file.error.size' | trans({}, app_param('app.admin.domain') ) }}' ,
+        config: {{ img | json_encode | raw }} ,
+        is_image: true 
+    });
+</script>
+{% endblock %}
+{% endblock %}
+
+        
+{% block appfile_widget %}
+    {% spaceless %}
+    <div class="{{ horizontal_input_wrapper_class }}">
+        <div class="app_form_file_box">
+            <input type="hidden" value="{{ value.url }}" {{ block('widget_attributes') }}/>
+            <input type="file" class="app_form_file_handle" />
+            <a class="app_form_file_view"></a>
+        </div>
+    </div>
+    {% endspaceless %}
+    {% block appfile_javascripts %}
+        <script type="text/javascript">
+            new AppFormFile( $('#{{ id }}'), {
+                value: {{ value | json_encode | raw }} ,
+                types: '{{ accept_file_type }}',
+                max: {{ max_file_size }} ,
+                id: '{{ attribute(form.parent.vars.value, admin_id )  | number_format  }}' ,
+                url: '{{ path( 'app_upload_save', { "admin_name": admin_name , "field_name": name }) }}' ,
+                type_error: '{{ 'app.form.file.error.type' | trans({}, app_param('app.admin.domain') ) }}' ,
+                size_error: '{{ 'app.form.file.error.size' | trans({}, app_param('app.admin.domain') ) }}' 
+            });
+        </script>
+    {% endblock %}
+{% endblock %}
+
+{% block apphtml_widget %}
+        
+    {% set required = false %}
+    {{ block('textarea_widget',  { attr:{ "required": false } } ) }}
+      
+    {% block apphtml_javascripts %}
+        <script type="text/javascript">
+            (function( html_options ) {
+                var options = {
+                    filemanager: {
+                        title: '{{ 'app.filemanager.title' | trans({}, app_param('app.admin.domain') ) }}' ,
+                        url: '{{ path( 'app_filemanager', { "admin_name": admin_name , "field_name": name, "entity_id": attribute(form.parent.vars.value, admin_id ) | number_format }) }}' 
+                    } ,
+                    external_plugins: {
+                        // "advtextcolor": "{{ asset('/bundles/appadmin/tinymce_plugins/advtextcolor/plugin.min.js') }}" ,
+                        "filemanager": "{{ asset('/bundles/appadmin/tinymce_plugins/filemanager/plugin.min.js') }}" 
+                    } ,
+                    language: '{{ app.request.locale }}' ,
+                    selector:'#{{ id }}' , 
+                    relative_urls: false ,
+                    plugins: 'advlist paste searchreplace link anchor autolink image table charmap fullscreen code textcolor ',
+                    // tools: 'inserttable',
+                    toolbar: 'undo redo | searchreplace | bold italic underline strikethrough remove | bullist numlist outdent indent blockquote hr | link unlink anchor  | forecolor backcolor',
+                    extended_valid_elements: '#span[id|class|style],#a[href|target|title|id|class|data-slide]'
+                };
+                if( options['language'] == 'en' || options['language'] == 'en_US' ) {
+                    delete options['language'] ;
+                }
+                
+                if( html_options.hasOwnProperty('valid_elements') ) {
+                    options['valid_elements'] = html_options['valid_elements'] ;
+                }
+                if( html_options.hasOwnProperty('extended_valid_elements') ) {
+                    options['valid_elements'] = html_options['extended_valid_elements'] ;
+                }
+                //console.log( options ) ;
+                options['setup']   = function(ed){
+                    
+                };
+                tinymce.init(options);
+            })({{ html_options | json_encode | raw }});
+        </script>
+    {% endblock %}
+        
+{% endblock %}
+
+        
+{% block appentity_widget %}
+    {{ block('choice_widget') }}
+{% endblock %}
+        
+{% block appembed_widget %}
+    {% if children_render %}
+        {{ block('form_widget') }}
+    {% else %}
+        {{ block('integer_widget') }}
+    {% endif %}
+{% endblock %}
+
+{% block appworkflow_widget %}
+    {{ block('choice_widget') }}
+{% endblock %}
+       
+{% block appowner_widget %}
+    {{ block('choice_widget') }}
+{% endblock %}
+
+{% block appview_widget %}
+    {% set appview_admin = app_admin_class(_object) %}
+    {% import appview_admin.template as appview_admin_macro %}
+    <div class="app-form-view"> 
+        {{ attribute(appview_admin_macro, "macro_value_"  ~ property_name , [_object] ) }}
+    </div>
+{% endblock %}
+        
+{% block appcheckbox_widget %}
+{% spaceless %}
+{% if label is not sameas(false) and label is empty %}
+    {% set label = name|humanize %}
+{% endif %}
+{% if form.parent != null and 'choice' not in form.parent.vars.block_prefixes %}
+    <div class="checkbox">
+{% endif %}
+
+    <label {% if not horizontal %}class="checkbox-inline"{% endif %}>
+
+        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %}/>
+        {{ value_text|trans({}, translation_domain) | raw }}
+    </label>
+    
+    {% if inline_help %}
+         <span class="form_inline_help">{{ inline_help | raw }}</span>
+    {% endif %}
+            
+{% if form.parent != null and 'choice' not in form.parent.vars.block_prefixes %}
+    </div>
+    {{ block('form_message') }}
+{% endif %}
+{% endspaceless %}
+{% endblock %}
+        
+{% block appcaptcha_widget %}
+{% if is_human %}
+-
+{% else %}
+{% spaceless %}
+
+    <span class="captcha_input">
+        <input type="text" name="{{ full_name }}[code]" class="form-control" />
+        <input type="hidden" name="{{ full_name }}[key]" value="{{ captcha_key }}" />
+    </span>
+    
+    <img class="captcha_image" id="{{ image_id }}" src="{{ captcha_code }}" alt="" title="captcha" width="{{ captcha_width }}" height="{{ captcha_height }}" />
+    
+    {% if reload %}
+        <script type="text/javascript">
+            function reload_{{ image_id }}() {
+                var img = document.getElementById('{{ image_id }}');
+                img.src = '{{ captcha_code }}?n=' + (new Date()).getTime();
+            }
+        </script>
+        <a class="captcha_reload" href="javascript:reload_{{ image_id }}();">{{ 'app.form.captcha.reload'|trans({}, translation_domain) }}</a>
+    {% endif %}
+    
+    {% if horizontal %}
+        {{ block('form_message') }}
+    {% endif %}
+    
+{% endspaceless %}
+{% endif %}
+{% endblock %}      
+        
+        
+        
+{% block apprange_widget %}
+    {% spaceless %}
+       <style type="text/css">
+               .tt-hint{
+                   padding:5px 12px;
+               }
+       </style>
+       <input style="width:{{ attr.maxlength + 1 }}em;" class="form-control" type="text" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}  />
+       
+    {% endspaceless %}
+       
+       
+    {% if horizontal %}
+        {{ block('form_message') }}
+    {% endif %}
+    
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var id = '#{{ id }}'  ;
+            var options  =  {{ range_options | json_encode | raw }} ;
+            if( !options.choices ) {
+                return ;
+            }
+            var local = [] ;
+            var unit    = options.unit  || '' ;
+            $.each(options.choices, function(){
+                var o = {
+                   'key': this ,
+                   'unit': unit , 
+                }
+                local.push(o) ;
+            }); 
+            $( id ).typeahead({
+                name: '{{ id }}',
+                local: local ,
+                valueKey: 'key',
+                template: '<p>{key}{unit}</p>',
+                engine: {
+                    compile: function(template) {
+                        return {
+                            render: function(context) {
+                                return template.replace(/\{(\w+)\}/g, function (match,p1) { return context[p1]; });
+                            }
+                        };
+                    }
+               } 
+            }).on('typeahead:initialized', function(){
+                var span    = $('<span class="app-addon">{{ range_options.unit_icon }}</span>') ;
+                var radius  = $( id ).css('border-top-left-radius') ;
+                if( !radius ) {
+                    radius = '3px';
+                }
+                $( id ).after(span).css({
+                    'position': 'relative' ,
+                    'top': '0' ,
+                    'z-index': 1 ,
+                    'background':'#fff',
+                    'border-radius':  radius + ' 0 0 ' + radius 
+                }) ;
+                span.css({
+                    'position': 'absolute' ,
+                    'top':  0  ,
+                    'left': ( $(id).width() + parseInt( $( id ).css('padding-left') ) + parseInt( $( id ).css('padding-right') ) + 1 ) ,
+                    'background-color': '#eee' ,
+                    'border-width': '1px 1px 1px 1px' ,
+                    'border-style': 'solid' ,
+                    'border-color': '#ccc' ,
+                    'font-size': $( id ).css('font-size') ,
+                    'padding-top': $( id ).css('padding-top') ,
+                    'padding-bottom': $( id ).css('padding-bottom') ,
+                    'padding-left': 4 , 
+                    'padding-right': 4 , 
+                    'height': $( id ).css('height') ,
+                    'line-height': $( id ).css('line-height') ,
+                    'border-radius': '0 ' + radius + ' ' + radius + ' 0',
+                    'z-index': 0 
+                });
+                
+            });
+        });
+        
+    </script>
+{% endblock %}

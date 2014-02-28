@@ -1,0 +1,215 @@
+/* Block scrolling */
+html, body {
+    overflow-x: hidden;
+}
+
+/* Padding for top static navbar */
+body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+    min-width:1000px;
+}
+
+#app_admin_locale_form  {
+    margin:0; 
+    padding:0;
+    #form_locale{
+        margin:0;
+        padding:0;
+        font-size: 12px ;
+        line-height:100% ;
+    }
+}
+
+div.mce-fullscreen {
+    z-index: 9999 ;
+}
+
+.form_optional{
+    font-size:8px;
+    color:#888;
+}
+
+.action_menu_root, .admin_tree_root {
+    li.current {
+        &>a {
+            color:#666;
+        }
+    }
+    li.current_ancestor>a{
+        font-weight:bold;
+    }
+}
+
+#action_menu_tree {
+    .action_menu_root, .admin_tree_root {
+        margin: 1em 1ex 1em 1em; 
+        padding:0;
+    }
+    ul{
+        margin:0 0 0 1em; 
+        padding:0;
+        list-style-position: inside;
+    }
+    li{
+        line-height:156%;
+        margin:0; 
+        padding:0;
+    }
+}
+
+#action_menu_bar{
+    margin:0 0 1em;
+    padding:0;
+    position:relative;
+    top:0; left:0;
+    height:24px;
+
+    a{
+        text-decoration:none;
+        font-size:12px;
+    }
+    .btn-primary a {
+        color:#fff;
+    }
+    .btn-default a {
+        color:#666;
+    }
+    .btn-group{
+        position:absolute;
+        right:0;
+        top:0;
+    }
+}
+
+.app_action_tree_nolink {
+    color:#428bca;
+}
+
+.app-form-view{
+    padding:6px 12px;
+    font-size:14px;
+}
+
+.api_call{
+    cursor:pointer;
+}
+
+.control-value{
+    padding-top: 7px;
+    margin-top: 0;
+    margin-bottom:0;
+}
+
+.app-well{
+    margin:auto 2em;
+    clear:both;
+}
+
+#footer{
+    clear:both;
+    padding: 20px 0px;
+    div {
+        padding: 20px 0px;
+        text-align:center;
+        border-top:1px solid #eee;
+    }
+}
+
+.lt-ie9 {
+    .breadcrumb {
+        height:36px;
+        li {
+            display:block;
+            float: left ;
+        }
+    }
+}
+
+
+span.app_breadcrumb_object {
+    &:before {
+        color: #ccc ;
+        content: "»";
+    }
+    a {
+        padding:0 0 0 4px;
+    }
+}
+a.app_breadcrumb_nolink {
+    &, &:hover {
+        color:#000;
+    }
+}
+
+.authorize_form_box {
+    label {
+        font-weight:normal;
+        font-size:12px;
+        margin:auto 6px;
+    }
+    .app_authorize_dl{
+        padding-left:30px;
+    }
+    .app_authorize_owner .app_authorize_dl{
+         padding-left:0;
+    }
+    .app_authorize_dt {
+        font-weight:bold;
+    }
+    fieldset {
+        border:1px solid #999;
+        padding:6px 8px;
+        margin:0;
+        legend{ 
+            margin:0 8px;
+            padding:0 4px;
+            font-size:14px;
+            font-weight:bold;
+        }
+        .app_authorize_dl{
+            .app_authorize_dt{
+                display:inline-block;
+                min-width:86px;
+            }
+        }
+    }
+
+    .app_authorize_hide{
+        display:none;
+    }
+    .app_authorize_node {
+        margin:6px 2px 4px 2em;
+        padding:4px 0;
+        border-top:1px solid #eee;
+    }
+    .app_authorize_workflow_children, .app_authorize_workflow_properties{
+        padding-left:56px;
+        .app_authorize_dl {
+            padding-left:10px;
+        }
+    }
+}
+
+.lt-ie9 ,
+.gt-ie8 {
+    #app_admin_locale_form #form_locale {
+        height:22px;
+        margin-top:12px;
+    }
+}
+
+
+.project_workflow_count_apply,
+.project_workflow_count_approved,
+.project_workflow_count_ready,
+.invest_workflow_count_apply,
+.invest_workflow_count_paymoney
+{
+    .app_user_group_admin & {
+        color:#f00;
+    }
+    .app_user_group_admin .btn-primary  & {
+        color: lighten(#f00, 20%);
+    }
+}

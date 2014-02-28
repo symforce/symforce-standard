@@ -1,0 +1,62 @@
+app_user:
+    label: 用户
+    form:
+        username:
+            label: 用户名
+            help: 可以使用汉字,字母,数字
+        email:
+            label: 邮件
+            help: 请输入有效的邮件地址以激活账号!
+        plainPassword:
+            label: 密码
+            help: 必须包含一位数字,符号,大小写字母!
+            error: 必须包含一位数字,符号,大小写字母!
+        password_confirmation:
+            label: 确认密码
+        id_card:
+            error: 你输入的不是有效的中华人民共和国二代身份证号码!
+            unique: 身份证已经被使用了, 如果你确认这是你的身份证, 请联系管理员!
+            help: 输入您的真实身份证号码
+        mobile_phone_number:
+            error: 请输入合法的电话号码 `%s`
+            help: 您的手机号码!
+        real_name:
+            error: 请输入真实的的姓名!
+            help: 输入您的真实姓名
+        id_term:
+            text: 我声明输入的是真实有效的中华人民共和国二代身份证号码
+            error: 你需要声明持有真实有效中华人民共和国二代身份证件!
+        registration_term:
+            label: 注册协议
+            text: 你必须同意<a uri="%url%" class="registration_term_url">%brand%注册协议</a>!
+            error: 你不同意注册协议!
+      
+    registration:
+        title: 注册账号
+        submit: 注册账号
+        page_expired: 页面已经过期!
+    resetting:
+        title: 找回密码
+        
+app_user_log:
+    label: 用户日志
+    form:
+        type:
+            choice:
+                reg: 注册
+                confirm: 激活
+app_group:
+    label: 用户组
+    form:
+        roles:
+            choice: 
+                - role_user: 普通用户
+                - role_member: 认证用户
+                - role_admin:  后台用户
+                - role_admin_editor: 后台编辑人员
+                - role_admin_manager: 管理员
+                - role_admin_parter: 合作伙伴
+                - role_admin_boss: 超级管理员
+        default_group:
+            no_admin: 不能使用后台用户作为默认或者认证组!
+            trust_default_conflict: 组不能同时作为默认和认证组

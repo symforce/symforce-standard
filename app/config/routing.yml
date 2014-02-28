@@ -1,0 +1,15 @@
+_app_user_fos:
+    resource: "@AppUserBundle/Resources/config/routing/fos.yml"
+    
+#_app_group_fos:
+#    resource: "@FOSUserBundle/Resources/config/routing/group.xml"
+#    prefix: /group 
+
+#_fos_comment_api:
+#    type: rest
+#    resource: "@FOSCommentBundle/Resources/config/routing.yml"
+#    prefix: /user/comment
+#    defaults: { _format: html }
+    
+_app_admin:
+    resource: "@AppAdminBundle/Resources/config/routing.yml"

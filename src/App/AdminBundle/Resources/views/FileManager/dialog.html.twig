@@ -1,0 +1,209 @@
+{% extends "AppAdminBundle::layout.html.twig" %}
+
+{% form_theme form 'form_div_layout.html.twig' %}
+
+{% block title %}
+    {{ 'app.filemanager.title' | trans({}, app_domain ) }}
+{% endblock %}
+    
+{% block header_css %}
+    <style type="text/css">
+            #app_form{
+                border: 0px solid #f00 ;
+            }
+            #app_form fieldset{
+                margin:0;
+                padding:0;
+            }
+            #app_form legend{
+                display:none;
+            }
+            #app_list {
+                border: 0px solid #00f ;
+            }
+            #img_handle {
+                width: 80% ;
+            }
+            .app_it {
+                height: 120px;
+                margin:8px ; 
+                padding:8px ;
+                float: left ;
+                overflow: hidden ;
+                border: 1px solid #f0f0f0; 
+                cursor:pointer ;
+                position: relative ; top:0; left:0 ;
+            }
+            .app_it img{
+                display: block;
+                width:100px;
+                max-height: 100px;
+            }
+            #app_trash { 
+                display:none;
+            }
+            #app_trash:hover { 
+                color:#f00 ;
+            }
+            .app_it #app_trash {
+                display:block ;
+                background: #fff ;
+                position: absolute ;
+                top:100%; left: 100%;
+                margin: -20px -20px ;
+            }
+            .app_it_default{
+                border:1px solid #666 ;
+            }
+    </style>
+{% endblock %}
+
+{% block html_body %}
+
+<div class="row-fluid">
+   
+<div id="app_form" class="col-xs-3">
+    <form class="form-inline bs-example " method="post" enctype="multipart/form-data">
+          {{ form_widget(form) }}
+           <input id="file_handle" type="file" />
+           <img id="img_handle" />
+    </form>
+</div>
+
+<div id="app_list" class="col-xs-9">
+    {% for it in list %}
+        <div class="app_it" >
+            <img src="{{ it }}" alt="{{ it.name }}" class="img-rounded" />
+        </div>
+    {% else %}
+        {{ 'app.filemanager.empty' | trans({}, app_domain ) }}
+    {% endfor %}
+</div>
+    
+<span id="app_trash" class="icon-trash"></span>
+
+</div>
+
+<script type="text/javascript">
+    $(function(){
+       var input = $('#form_content') ;
+       var img_handle = $('#img_handle') ;
+       var trash =  $('#app_trash') ;
+       var trash_timer  = null ;
+        $('#app_list img').each(function(img){
+           if ( '{{ default_value }}' === $(this).attr('src') ) {
+               $(this).closest('div').addClass('app_it_default') ;
+           }
+        });
+       
+       $( "#app_list" ).delegate( "div.app_it", "click", function(evt) {
+           var it  = $(this) ;
+           var img = $(this).find('img') ;
+           var url  = img.attr('src') ;
+           if( $(evt.target).hasClass('icon-trash') ) {
+               // sent ajax query to delete this image
+              $.ajax({
+                type: 'POST' ,
+                dataType: 'json' ,
+                data: {
+                    'action': 'delete' ,
+                    'url': url 
+                },
+              }).done(function(o) {
+                  if( o.error ) {
+                      alert([ o.error, o.errno ])
+                  } else {
+                     it.remove() ; 
+                  }
+              }).error(function(o) {
+                  showError(o.responseText) ;
+              });
+               return ;
+           }
+           
+           var args = top.tinymce.activeEditor.windowManager.getParams();
+           args.callback( url );
+           top.tinymce.activeEditor.windowManager.close();
+           
+       }).delegate( "div.app_it", "mouseenter", function() {
+           if( trash_timer ) {
+               clearTimeout(trash_timer) ;
+               trash_timer  = null ;
+           }
+           var img = $(this).find('img') ;
+           img_handle.attr('src', img.attr('src') ) ;
+           
+           if( !$(this).hasClass('app_it_default') ) {
+               $(this).append( trash ) ;
+           } else {
+               $(document.body).append( trash ) ;
+           }
+           
+       }).delegate( "div.app_it", "mouseleave", function() {
+           var img = $(this).find('img') ;
+           trash_timer  = setTimeout(function(){
+               trash_timer  = null ;
+               $(document.body).append( trash ) ;
+               img_handle.attr('src', '' ) ;
+           }, 100);
+       });
+       
+       
+    
+       function showError(err){
+           alert(err)
+       }
+       $( $('#file_handle') ).fileupload({
+                   dataType: 'json' , 
+                   paramName: 'attachment' ,
+                   error: function( data , e){
+                       console.log(data.responseText, e ) 
+                   } ,
+                   add: function (e, data) {
+                       var error   = null ;
+                        
+                       var acceptFileTypes = '{{ ext_list }}' ;
+                       var type_pat = acceptFileTypes.replace(/jpg/,'jpeg') ;
+                       var type_reg = new RegExp('^image\/(' + type_pat + ')$'  ,  'i' ) ;
+                       var file_reg = new RegExp('\.(' + acceptFileTypes + ')$'  ,  'i' ) ;
+
+                       if( !type_reg.test(data.originalFiles[0]['type']) && !file_reg.test(data.originalFiles[0]['name'])   ) {
+                           error    = 'Not an accepted file type' ;
+                       } else if(data.originalFiles[0]['size'] > {{ options.max }} ) {
+                           error    = 'Filesize is too big' ;
+                       }
+                       if( error ) {
+                           showError( error ) ;
+                       } else {
+                           data.submit();
+                       }
+                   },
+                   done: function (e, data) {
+                       var box = $( this).closest('.app_admin_form_image') ;
+                       var img = box.find('img') ;
+                       var o   = data.result ;
+                       if( o.url ) {
+                           $('#img_handle').attr('src', o.url ) ;
+                           input.val(o.url ) ;
+                           // add a new image 
+                           var it = $('<div/>', { 'class': 'app_it' }) ;
+                           $('<img/>', { 'alt': o.name, src: o.url }).appendTo( it ) ;
+                           $( it ).prependTo( "#app_list" );
+                       } else {
+                           if( o.error ) {
+                               showError(o.error) ;
+                           }
+                       }
+
+                   }
+               }) ;
+        
+    });
+    function testit(evt){
+        var args = top.tinymce.activeEditor.windowManager.getParams();
+        args.callback( String(location) );
+        top.tinymce.activeEditor.windowManager.close();
+    }
+</script>
+
+{% endblock %}

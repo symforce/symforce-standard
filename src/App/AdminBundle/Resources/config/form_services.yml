@@ -1,0 +1,147 @@
+services:
+    
+    app.validator.loader:
+        class: App\AdminBundle\Compiler\Loader\ValidatorLoader
+        calls:
+            - [ setAdminLoader, ["@app.admin.loader"] ] 
+            
+    # form.extension
+    
+    app.form.extension.inline_help:
+        class: App\AdminBundle\Form\Extension\InlineHelpTypeExtension
+        arguments: [ [] ]
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type_extension, alias: form }
+         
+    app.form.extension.dynamic:
+        class: App\AdminBundle\Form\Extension\DynamicViewTypeExtension
+        arguments: [ [] ]
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type_extension, alias: form }
+         
+    # form.type
+        
+    app.form.type.color:
+        class: App\AdminBundle\Form\Type\ColorType
+        tags:
+            - { name: form.type, alias: appcolor }
+        
+    app.form.type.referer:
+        class: App\AdminBundle\Form\Type\RefererType
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type, alias: appreferer }
+            
+    app.form.type.datetime:
+        class: App\AdminBundle\Form\Type\DateTimeType
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type, alias: appdatetime }
+            
+    app.form.type.file:
+        class: App\AdminBundle\Form\Type\FileType
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type, alias: appfile }
+           
+    app.form.type.image:
+        class: App\AdminBundle\Form\Type\ImageType
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type, alias: appimage }
+           
+    app.form.type.html:
+        class: App\AdminBundle\Form\Type\HtmlType
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type, alias: apphtml }
+            
+    app.form.type.password:
+        class: App\AdminBundle\Form\Type\PasswordType
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type, alias: apppassword }
+            
+    app.form.type.embed:
+        class: App\AdminBundle\Form\Type\EmbedType
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type, alias: appembed }
+            
+    app.form.type.entity:
+        class: App\AdminBundle\Form\Type\EntityType
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type, alias: appentity }
+            
+    app.form.type.workflow:
+        class: App\AdminBundle\Form\Type\WorkflowType
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type, alias: appworkflow }
+
+    app.form.type.owner:
+        class: App\AdminBundle\Form\Type\OwnerType
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type, alias: appowner }
+            
+    app.form.type.view:
+        class: App\AdminBundle\Form\Type\ViewType
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type, alias: appview }
+            
+    app.form.type.checkbox:
+        class: App\AdminBundle\Form\Type\CheckboxType
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type, alias: appcheckbox }
+            
+    app.form.type.captcha:
+        class: App\AdminBundle\Form\Type\CaptchaType
+        arguments: [ "@session", "@gregwar_captcha.generator", "@translator", %gregwar_captcha.config% ]
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type, alias: appcaptcha }
+         
+    app.form.type.group:
+        class: App\AdminBundle\Form\Type\GroupType
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type, alias: appgroup }
+            
+    app.form.type.range:
+        class: App\AdminBundle\Form\Type\RangeType
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type, alias: apprange }
+            
+    app.form.type.combobox:
+        class: App\AdminBundle\Form\Type\ComboboxType
+        calls:
+            - [ setContainer, ["@service_container"] ]
+        tags:
+            - { name: form.type, alias: appcombobox }
+            
+            
+            

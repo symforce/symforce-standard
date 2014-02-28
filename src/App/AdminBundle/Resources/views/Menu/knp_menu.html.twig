@@ -1,0 +1,29 @@
+{% import  'knp_menu.html.twig' as knp_menu %}
+
+<div class="btn-group btn-group-sm">
+{% for item in menu.children %}
+{% if item.displayed %}
+    {%- set classes = item.attribute('class') is not empty ? [item.attribute('class')] : [] %}
+    {%- set classes = classes|merge(["btn"]) %}
+    {%- if item.isCurrent %}
+        {%- set classes = classes|merge(["btn-primary"]) %}
+    {%- else %}
+        {%- set classes = classes|merge(["btn-default"]) %}
+    {%- endif %}
+    {%- if item.actsLikeFirst %}
+        {%- set classes = classes|merge(["first"]) %}
+    {%- endif %}
+    {%- if item.actsLikeLast %}
+        {%- set classes = classes|merge(["last"]) %}
+    {%- endif %}
+    {%- set attributes = item.attributes %}
+    {%- if classes is not empty %}
+        {%- set attributes = attributes|merge({'class': classes|join(' ')}) %}
+    {%- endif %}
+
+    <a href="{{ item.uri }}" {{ knp_menu.attributes(attributes) }} {# knp_menu.attributes(item.linkAttributes) #}>
+        <span{{ knp_menu.attributes(item.labelAttributes) }}>{% if item.getExtra('safe_label', false) %}{{ item.label|raw }}{% else %}{{ item.label }}{% endif %}</span>
+    </a>
+{% endif %}
+{% endfor %}
+</div>

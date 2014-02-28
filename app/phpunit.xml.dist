@@ -1,0 +1,8 @@
+<!-- phpunit.xml.dist -->
+<phpunit bootstrap="bootstrap.php.cache">
+    <testsuites>
+        <testsuite name="Project Test Suite">
+            <directory>../src/App/*Bundle/Tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

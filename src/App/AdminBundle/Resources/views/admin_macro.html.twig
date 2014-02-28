@@ -1,0 +1,45 @@
+
+{% macro action(admin, action_name, object = null , routeaction = null ) %}
+    {% if admin.auth(action_name) %}
+        {% set action   = admin.getAction(action_name) %}
+        <a href="{{ admin.path( action_name, object) }}" class="btn {% if routeaction == action_name %}btn-primary{% else %}btn-default{% endif %}">
+            {% if action.icon %}<i class="icon-{{ action.icon }}"></i>{% endif %}
+            {{ action.actionlabel(object) }}
+        </a>
+    {% endif %}
+{% endmacro %} 
+
+{% macro breadcrumb(_admin, action ) %}
+    <li>
+    {% if app_auth( _admin.name, 'list', _admin.routeobject ) %} 
+        <a href="{{ _admin.path('list', _admin.routeobject ) }}">{{ _admin.label }}</a>
+    {% else %}
+        {{ _admin.label }}
+    {% endif %}
+        
+    
+        {% if action %}
+            {% if 'list' != action.name %}
+                 <span class="app_breadcrumb_object">
+                     <a class="app_breadcrumb_nolink">
+                         {% if 'view' == action.name %}
+                            {{ _admin.string(_admin.routeobject) }}
+                         {% else %}
+                             {{ action.titlelabel }}
+                         {% endif %}
+                     </a>
+                 </span>
+            {% endif %}
+        {% else %}
+             <span class="app_breadcrumb_object">
+                {% if app_auth( _admin.name, 'view', _admin.routeobject ) %} 
+                    <a href="{{ _admin.path('view', _admin.routeobject ) }}">{{ _admin.string(_admin.routeobject) }}</a>
+                {% else %}
+                    <a class="app_breadcrumb_nolink">{{ _admin.string(_admin.routeobject) }}</a>
+                {% endif %}
+             </span>
+       {% endif %}
+    
+    
+    </li>
+{% endmacro %}

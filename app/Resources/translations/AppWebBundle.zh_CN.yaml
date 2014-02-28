@@ -1,0 +1,8 @@
+
+bank_card:
+    form:
+        card_id:
+            error: 你输入的不是有效的银行卡!
+        bank_term:
+            text: 你必须同意<a uri="%url%" class="bank_term_url">%brand%银行卡协议</a>!
+            error: 你不同意银行卡协议!

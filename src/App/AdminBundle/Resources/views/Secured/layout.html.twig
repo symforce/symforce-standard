@@ -1,0 +1,6 @@
+{% extends "AppAdminBundle::layout.html.twig" %}
+
+{% block content_header_more %}
+    {{ parent() }}
+    <li>logged in as <strong>{{ app.user ? app.user.username : 'Anonymous' }}</strong> - <a href="{{ path( app_param('app_admin.route.logout_path') ) }}">Logout</a></li>
+{% endblock %}

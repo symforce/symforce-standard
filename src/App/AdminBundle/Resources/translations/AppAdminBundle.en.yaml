@@ -1,0 +1,38 @@
+
+
+app:
+    admin:
+        brand: Brand
+        dashboard: DashBoard
+        
+    action:
+        create: 
+            title: Create %entity_name%
+            finish: Create `%object%` successfully
+        update: 
+            title: Update %entity_name% `%object%`
+            finish: Update `%object%` successfully
+        delete: 
+            confirm: Are you sure to delete %object% ?
+            finish: Delete `%object%` successfully
+            
+    button:
+        save: Save Changes
+        cancel: Cancel 
+        delete: Yes, Delete it
+        
+    form:
+        file:
+            error: 
+                type: Only allow @{types}, you choice `@{file}`
+                size: Your file size @{size} is bigger then @{max_size}
+        
+    profile:
+        welcome: Welcome %username%
+        logout: Logout
+
+    login:
+        label:  Please Sign In
+        username:  Username
+        password:  Password
+        signin: Sign In

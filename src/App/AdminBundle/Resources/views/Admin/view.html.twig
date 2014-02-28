@@ -1,0 +1,13 @@
+{% extends "AppAdminBundle::action_layout.html.twig" %}
+
+
+{% block content_left %}
+    
+    <div class="app-well">
+        <h1>{{ title }}</h1>
+        {% block content_view %}
+
+        {% endblock %}
+    </div>
+    
+{% endblock %}

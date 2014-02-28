@@ -1,0 +1,70 @@
+{% extends "AppWebBundle::page_layout.html.twig" %}
+
+{% block app_content_page %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% form_theme form "AppAdminBundle:Form:fields.html.twig" %}
+<style>
+    .reg_box{
+        background: url('/bundles/appweb/images/reg/reg_bg.gif') repeat-y right;
+    }
+    .reg_box .form_box{
+        background: url('/bundles/appweb/images/reg/reg_img.gif') no-repeat right bottom;
+        border-bottom:1px solid #f4f4ec;
+        padding:5px 0 80px 0;
+    }
+    .form_box form {
+        width: 70%;
+    }
+    .form_box form h2{
+        font-size: 20px;
+        margin-bottom: 30px;
+    }
+    .form_box .col-xs-3{
+        width: 16%;
+    }
+    .form_box .col-xs-9{
+        width: 83%;
+    }
+    .form_box  .col-xs-offset-3{
+        margin-left:16%;
+    }
+    .form_box hr{
+        border-width: 2px 0 0;
+        left: 135px;
+        position: absolute;
+        top: 27px;
+        width: 80%;
+    }
+     {#.form_box .captcha_image {
+        margin: -25px 8px 0;
+    }#}
+</style>
+<div class="reg_box">
+    <div class="form_box">
+        <hr />
+        <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="form-horizontal" id="register_form">
+        {{ form_widget(form) }}
+
+            <div class="form-group">
+                <div class="col-xs-offset-3 col-xs-9">
+                    <button type="submit" class="btn btn-primary">{{ 'app_user.registration.submit'|trans({}, admin.domain ) }}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(function() {
+        new FormValidator('#register_form');
+        $('.registration_term_url').click(function() {
+            var url = $(this).attr('uri');
+            window.open(url, "app_registration_term", "width=956,height=900,scrollbars=yes,resizable=no");
+        })
+    });
+
+</script>
+
+{% endblock %}

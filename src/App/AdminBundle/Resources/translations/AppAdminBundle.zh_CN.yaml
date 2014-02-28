@@ -1,0 +1,47 @@
+app:
+    admin:
+        brand: 站点品牌
+        dashboard: 管理面板
+        
+    action:
+        list: 
+            label: 列表
+        create: 
+            title: 创建 %entity_name% 
+            label: 创建 
+            finish: 创建 `%object%` 成功
+        update: 
+            title: 编辑 %entity_name% `%object%`
+            label: 编辑 
+            finish: 编辑 `%object%` 成功
+        delete: 
+            label: 删除 
+            confirm: 你确定要删除 `%object%` 吗 ?
+            finish: 删除 `%object%` 成功
+        view:
+            label: 查看
+        search:
+            label: 搜索
+        batch:
+            label: Batch
+    button:
+        save: 保存更改
+        cancel: 取消 
+        delete: 是的, 请删除它
+    form:
+        choices:
+            yesno: { yes: 是, no: 否 } 
+        file:
+            error: 
+                type: 只允许文件类型 @{types}, 您选择了 `@{file}`
+                size: 您选择的文件尺寸 @{size} 大于 @{max_size}    
+    profile:
+        welcome: 你好, %username%
+        logout: 退出
+
+    login:
+        label:  请您登陆系统
+        username:  用户名
+        password:  密码
+        signin: 登录
+        
