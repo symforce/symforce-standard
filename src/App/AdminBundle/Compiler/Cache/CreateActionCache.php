@@ -39,6 +39,7 @@ abstract class CreateActionCache extends ActionCache {
         
         $list_url = $this->admin->path('list') ;
         
+        $this->admin->setFormOriginalObject($object) ;
         $builder  = $controller->createFormBuilder( $object,  array(
             'label' => $label ,
         )) ; 
@@ -46,6 +47,7 @@ abstract class CreateActionCache extends ActionCache {
         $this->admin->buildCreateForm($controller, $object, $builder, $this ) ;
         $this->buildFormReferer($request, $builder, $object, $list_url);
         $form     = $builder->getForm() ;
+        $this->setForm($form);
         
         if( $request->isMethod('POST') ) {
              $form->handleRequest($request); 
@@ -53,15 +55,11 @@ abstract class CreateActionCache extends ActionCache {
                   $this->admin->onUpdate($controller, $request, $this, $object, $form ) ;
                   if ($form->isValid()) {
                         $this->admin->update( $object ) ;
-                        $request->getSession()->getFlashBag()->add('info', 
-                                   $this->trans( 'app.action.create.finish' , $object )
-                                );
-
-                        return $controller->redirect( $this->getFormReferer($form) ) ;
+                        return $this->admin->afterUpdate($controller, $request, $this, $object, $form) ;
                   }
              } 
         }
-        
+
         return $controller->render( $this->template , array(
             'apploader' =>  $controller->get('app.admin.loader')  ,
             'admin' => $this->admin ,

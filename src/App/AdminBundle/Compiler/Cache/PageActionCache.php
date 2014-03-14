@@ -36,7 +36,7 @@ class PageActionCache extends ActionCache  {
         
         $page_admin = $this->admin->getPageAdmin() ;
         
-        
+        $this->admin->setFormOriginalObject($object) ;
         $builder  = $controller->createFormBuilder($page_object, array(
             'label' => $this->admin->getFormLabel() ,
         )) ;
@@ -47,6 +47,7 @@ class PageActionCache extends ActionCache  {
         $page_admin->buildUpdateForm($controller, $page_object, $builder, $update_action ) ;
         $this->buildFormReferer($request, $builder, $object, $list_url);
         $form     = $builder->getForm() ;
+        $this->setForm($form);
         
         if( $request->isMethod('POST') ) {
              $form->bind($request);

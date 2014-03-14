@@ -239,7 +239,32 @@ trait AdminWorkflow {
         }
         $_new_step   = $this->workflow['value'][ $_new_value ] ;
         if( $_new_step !== $new_step ) {
-            throw new \Exception(sprintf("workflow new step not match(%s,%s)", $new_value, $_new_step ));
+            throw new \Exception(sprintf("workflow new step not match(%s,%s)", $new_step, $_new_step ));
+        }
+    }
+    
+    public function revertWorkflowStatus($object, $old_status = null ) {
+        $prop = $this->getReflectionProperty( $this->workflow['property']) ;
+        if( $old_status ) {
+            if( !isset( $this->workflow['status'][$old_status]) ) {
+                throw new \Exception(sprintf('status `%s` for admin `%s` not exists', $new_status, $this->name));
+            }
+            if( $this->workflow['status'][$old_status]['internal'] ) {
+                throw new \Exception(sprintf('status `%s` for admin `%s` is intelnal', $new_status, $this->name));
+            }
+            $old_value  = $this->workflow['status'][$old_status]['value'] ;
+        } else {
+            $_object    = $this->getFormOriginalObject() ;
+            if( !$_object ) {
+                throw new \Exception("no old status");
+            }
+            $old_value  = $prop->getValue( $_object ) ;
+        }
+        if( $old_value !== $prop->getValue($object) ) {
+            $prop->setValue($object,  $old_value );
+            $em = $this->getManager() ;
+            $em->persist($object);
+            $em->flush();
         }
     }
 }

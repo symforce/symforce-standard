@@ -143,9 +143,9 @@ class CaptchaType extends AbstractType
         $persistOptions['ip'] = $this->container->get('request')->getClientIp() ;
         
         if( !$this->container->getParameter('kernel.debug') ) {
-            $persistOptions['bypass_code']  = null ;
+            // $persistOptions['bypass_code']  = null ;
         }
-       
+        
         $this->session->set( $session_key , $persistOptions);
     }
 

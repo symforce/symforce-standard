@@ -1,11 +1,9 @@
 {% extends "AppAdminBundle::layout.html.twig" %}
 
 {% macro render_dashboard_admin(group_name, group, app_domain) %}
-    {% set group_children = group.getChildren() %}
-    {% if group_children|length > 0 %}
     <table class="table table-bordered">
         <caption> {{ group.label | trans({}, app_domain )  }} </caption>
-        {% for entity_name, item in group_children %}
+        {% for entity_name, item in group.getChildren() %}
             {% if app_auth(entity_name) %}
                 {% set admin = app_admin(entity_name) %}
                     <tr>
@@ -26,7 +24,6 @@
             {% endif %}
         {% endfor %}
     </table>
-    {% endif %}
 {% endmacro %} 
 
 

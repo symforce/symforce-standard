@@ -21,7 +21,7 @@ class AdminController extends Controller
         $this->loader   = $this->container->get('app.admin.loader') ;
         
         $cache  = $this->container->get('app.page.service') ;
-        $access = \Symfony\Component\PropertyAccess\PropertyAccess::createPropertyAccessor() ;
+//        $access = \Symfony\Component\PropertyAccess\PropertyAccess::createPropertyAccessor() ;
         
         $option = $cache->getAdminOption( $request->attributes->get('_app_route_name') ) ;
         

@@ -9,7 +9,10 @@ use App\AdminBundle\Compiler\Annotation as Admin ;
 /**
  * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\NestedTreeRepository")
  * @ORM\Table(name="app_pages")
- * @Admin\Entity("app_page", label="Page", icon="archive", position=3, menu="admin_group", dashboard=true )
+ * @Admin\Entity("app_page", label="Page", icon="archive", position=3, menu="admin_group", dashboard=true , groups={
+ *      "default": "默认",
+ *      "seo":"SEO"
+ * })
  * 
  * @Gedmo\Tree(type="nested") 
  */
@@ -35,26 +38,26 @@ class Page
     /**
      * @Gedmo\Slug(fields={"title"}, updatable=false )
      * @ORM\Column(length=255, unique=true)
-     * @Admin\Form(group="SEO")
+     * @Admin\Form(group="seo")
      * @Admin\Table()
      */
     public $slug;
     
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Admin\Form(group="SEO")
+     * @Admin\Form(group="seo")
      */
     public $meta_keywords ;
     
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Admin\Form(group="SEO")
+     * @Admin\Form(group="seo")
      */
     public $meta_description ;
     
     /**
      * @ORM\Column(type="integer")
-     * @Admin\Form(position=1, group="SEO")
+     * @Admin\Form(position=1, group="seo")
      * @Admin\Table()
      */
     public $order_by = 0 ;

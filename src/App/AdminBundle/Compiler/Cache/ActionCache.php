@@ -351,12 +351,27 @@ abstract class ActionCache {
         
         $matcher = $this->admin->getService('router')->getMatcher();
         
-        $referer = parse_url( $request->headers->get('referer'));
-        $referer_parameters = $matcher->match($referer['path']);
+        $baseUrl    = $request->getBaseUrl() ;
         
+        $referer = parse_url( $request->headers->get('referer') );
+        $referer_url    = $referer['path'] ;
+        if(strlen($baseUrl) > 1 && substr($referer['path'], 0, strlen($baseUrl)) ==  $baseUrl ) {
+             $referer_url = substr($referer['path'], strlen($baseUrl));
+        }
+        
+        if( $referer_url === $referer['path'] ) {
+            $baseUrl    = null ;
+        }
+        
+        $referer_parameters = null ;
+        try{
+            $referer_parameters = $matcher->match( $referer_url );
+        }catch(\Symfony\Component\Routing\Exception\ResourceNotFoundException $e){ 
+            
+        }
         $parameters = $matcher->match($request->getPathInfo());
         
-        if( $parameters['_route'] !== $referer_parameters['_route'] ) {
+        if( !$referer_parameters || $parameters['_route'] !== $referer_parameters['_route'] ) {
             $url    = $referer['path'] . ( isset($referer['query']) ? '?' . $referer['query'] : '' ) ;
         }
         
@@ -365,13 +380,48 @@ abstract class ActionCache {
             'referer_url_route'     => $parameters['_route'] ,
             'referer_url_request'   => $request ,
             'referer_url_matcher'   => $matcher ,
+            'referer_base_url'      => $baseUrl ,
         ));
         
+        if( $this->admin_loader->getContainer()->getParameter('kernel.debug')){
+            $builder->add('app_admin_form_debug', 'choice', array(
+                'label' => 'Debug' ,
+                'mapped'   => false ,
+                'expanded'  => true ,
+                'data' => 0 ,
+                'widget_type' => 'inline' ,
+                'choices'    => array(
+                    '1' => 'Yes' , 
+                    '0' => 'No' , 
+                ),
+            ));
+        }
     }
     
-    public function getFormReferer($form){
+    public function getFormReferer(\Symfony\Component\Form\Form $form){
         $url    = $form->get('app_admin_form_referer')->getData()  ;
         return $url ;
+    }
+    
+    public function getFormDebug(\Symfony\Component\Form\Form $form){
+        if( !$form->has('app_admin_form_debug')) {
+            return ;
+        }
+        $url    = $form->get('app_admin_form_debug')->getData()  ;
+        return $url ;
+    }
+    
+    
+    private $_form = null ;
+    protected function setForm(\Symfony\Component\Form\Form $form){
+        $this->_form   = $form ;
+    }
+    
+    /**
+     * @return \Symfony\Component\Form\Form 
+     */
+    public function getForm(){
+        return $this->_form ;
     }
     
 }

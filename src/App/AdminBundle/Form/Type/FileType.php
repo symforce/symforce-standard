@@ -3,6 +3,7 @@
 namespace App\AdminBundle\Form\Type;
 
 use Symfony\Component\Form\Extension\Core\Type\HiddenType ;
+use Symfony\Component\Form\AbstractType;
 
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -17,7 +18,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use App\AdminBundle\Form\DataTransformer\FileTransformer ;
 
 
-class FileType extends HiddenType {
+class FileType extends AbstractType {
     
     /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
@@ -90,6 +91,19 @@ class FileType extends HiddenType {
                 $event->setData(null) ;
             }
         });
+        
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event) use ($options){
+            if( isset($options['required']) && $options['required'] ) {
+                $data   = $event->getData();
+                $form   = $event->getForm() ;
+                if( empty($data['url']) ) {
+                    $error  = $this->container->get('translator')->trans( 'form.file.required', array(
+                        '%field%' => isset($options['label'])  ? $options['label']: $form->getName() , 
+                    ) ) ;
+                    $form->addError(new \Symfony\Component\Form\FormError( $error ));
+                }
+            }
+        });
     }
     
     public function getName(){
@@ -110,7 +124,11 @@ class FileType extends HiddenType {
     }
     
     public function setDefaultOptions(OptionsResolverInterface $resolver) {
-        parent::setDefaultOptions($resolver) ;
+       
+        $resolver->setDefaults( array(
+            'compound'       => false ,
+        ));
+        
         $resolver->setRequired(array(
              'admin_class' ,
              'admin_property' ,

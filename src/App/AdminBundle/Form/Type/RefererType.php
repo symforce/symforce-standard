@@ -48,10 +48,20 @@ class RefererType extends HiddenType {
             $matcher    = $options['referer_url_matcher'] ;
             
             $url   = $evt->getData() ;
+            
             if( $url ) {
                 $path   = parse_url($url, PHP_URL_PATH) ;
-                $parameters = $matcher->match($path);
+                
+                if( $options['referer_base_url'] && substr( $path , 0, strlen($options['referer_base_url'])) === $options['referer_base_url'] ) {
+                      $path     = substr($path, strlen($options['referer_base_url'])) ;
+                }
+                
+                try{
+                    $parameters = $matcher->match($path);
+                }catch(\Symfony\Component\Routing\Exception\ResourceNotFoundException $e){ 
 
+                }
+                
                 if( $parameters['_route'] === $options['referer_url_route'] ) {
                     $url    = null ;
                 }
@@ -83,6 +93,7 @@ class RefererType extends HiddenType {
              'referer_url_route' ,
              'referer_url_request' ,
              'referer_url_matcher' ,
+             'referer_base_url' ,
         ));
         
         $resolver->setDefaults(array(

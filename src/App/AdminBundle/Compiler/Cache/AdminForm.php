@@ -19,7 +19,26 @@ trait AdminForm {
                 if( !isset($status['properties'][$property_name]) ) {
                     return ;
                 }
-                if( \App\AdminBundle\Compiler\MetaType\Admin\Workflow::FLAG_VIEW & $status['properties'][$property_name] ) {
+                $flag   = $status['properties'][$property_name] ;
+                $readable   = \App\AdminBundle\Compiler\MetaType\Admin\Workflow::FLAG_VIEW & $flag ;
+                $editable   = \App\AdminBundle\Compiler\MetaType\Admin\Workflow::FLAG_EDIT & $flag ;
+                if( \App\AdminBundle\Compiler\MetaType\Admin\Workflow::FLAG_AUTH & $flag ) {
+                    if( $readable || $editable ) {
+                        throw new \Exception("big error");
+                    }
+                    $securityContext = $this->container->get('security.context');
+                    $user   = $securityContext->getToken()->getUser() ;
+                    $group  = $user->getUserGroup() ;
+                    if( $group ) {
+                        $flag   = $group->getWorkflowPropertyVisiable($this->name, $property_name, $status['name']); 
+                        if( '1' === $flag ) {
+                            $editable   = true ;
+                        } else if ( '2' === $flag ) {
+                            $readable   = true ;
+                        }
+                    }
+                }
+                if( $readable ) {
                     $options    = array(
                         
                     ) ;
@@ -30,7 +49,7 @@ trait AdminForm {
                     $builder->add( $property_name, 'appview', $options ) ;
                     return ;
                 }
-                if( !(\App\AdminBundle\Compiler\MetaType\Admin\Workflow::FLAG_EDIT & $status['properties'][$property_name]) ) {
+                if( ! $editable ) {
                     return ;
                 }
             }
@@ -38,7 +57,7 @@ trait AdminForm {
         $options    = $admin->getFormBuilderOption( $property_name, $action, $object ) ;
         $type       = $options['appform_type'] ;
         if( isset($options['read_only']) && $options['read_only'] ) {
-            if( in_array($type, array('appentity', 'appworkflow', 'choice', 'checkbox', 'appfile', 'appimage', 'apphtml', 'money' )) ) {
+            if( in_array($type, array('appowner', 'appentity', 'appworkflow', 'choice', 'checkbox', 'appfile', 'appimage', 'apphtml', 'money' )) ) {
                 $options    = array(
                     
                 ) ;
@@ -56,6 +75,7 @@ trait AdminForm {
             $subscribers = $options['subscribers'] ;
             unset($options['subscribers']) ;
         }
+        
         $builder->add( $property_name, $type, $options ) ;
         if( $subscribers ) {
             $_builder   = $builder->get( $property_name ) ;
@@ -109,6 +129,7 @@ trait AdminForm {
         if( $_options ) {
             \Dev::merge($options , $_options ) ;
         }
+        
         if( $constraints ) {
             $options['constraints'] = array_values($constraints) ;
         }

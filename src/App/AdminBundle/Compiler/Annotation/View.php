@@ -30,4 +30,7 @@ class View extends AbstractProperty
     /** @var integer */
     public $position ;
     
+    /** @var string */
+    public $group ;
+    
 }

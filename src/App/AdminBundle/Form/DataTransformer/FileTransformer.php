@@ -50,7 +50,11 @@ class FileTransformer implements DataTransformerInterface {
         if( is_object($value) ) {
             return $value ;
         } 
-        
-        return $value ;
+        if( is_array($value) ) {
+            if( !isset($value['url']) && !empty($value['url']) ) {
+                throw new \Exception('big error, should already convert on the pre_post event');
+            }
+            return null ;
+        }
     }
 }

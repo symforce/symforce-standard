@@ -466,6 +466,39 @@ abstract class AdminCache extends ContainerAware {
         return $dql ;
     }
 
+    public function afterUpdate(Controller $controller, Request $request, ActionCache $action, $object, \Symfony\Component\Form\Form $form ){
+         $request->getSession()->getFlashBag()->add('info',
+                     $this->trans( 'app.action.update.finish' , $object )
+                 ) ;
+         return $controller->redirect( $action->getFormReferer($form) ) ;
+     }
 
+    public function afterCreate(Controller $controller, Request $request, ActionCache $action, $object, \Symfony\Component\Form\Form $form ){
+         $request->getSession()->getFlashBag()->add('info', 
+                                    $this->trans( 'app.action.create.finish' , $object )
+                                 );
+         return $controller->redirect( $action->getFormReferer($form) ) ;
+    }
+   
+    private $_form_original_object = null ;
+    public function setFormOriginalObject($object){
+        $this->_form_original_object   = clone $object ;
+    }
     
+    public function getFormOriginalObject(){
+        return $this->_form_original_object ;
+    }
+    
+    public function isActionFormDebug(){
+        $action = $this->getRouteAction() ;
+        if( !$action ) {
+            return ;
+        }
+        $_action    = $this->getAction($action) ;
+        $form   = $_action->getForm() ;
+        if( !$form ) {
+            return ;
+        }
+        return $_action->getFormDebug( $form ) ;
+    }
 }

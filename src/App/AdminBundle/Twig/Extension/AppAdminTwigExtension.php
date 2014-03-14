@@ -58,6 +58,8 @@ class AppAdminTwigExtension extends \Twig_Extension
             'app_picker_format' => new \Twig_Function_Method($this, 'app_picker_format') ,
             'app_string_cut' => new \Twig_Function_Method($this, 'string_cut', array('is_safe' => array('html')) ) ,
             
+            'app_percent' => new \Twig_Function_Method($this, 'app_percent', array('is_safe' => array('html')) ) ,
+            
         );
     }
     
@@ -226,7 +228,13 @@ class AppAdminTwigExtension extends \Twig_Extension
         return  $code ; 
     }
     
-    
+    public function app_percent($number){
+        return $number * 100 / 100 ;
+    }
+
+
+
+
     /**
      * Returns the name of the extension.
      *

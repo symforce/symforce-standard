@@ -41,6 +41,7 @@ abstract class UpdateActionCache extends ActionCache  {
         
         $tr = $controller->get('translator') ;
         
+        $this->admin->setFormOriginalObject($object) ;
         $builder  = $controller->createFormBuilder($object, array(
             'label' => $this->admin->getFormLabel() ,
         )) ;
@@ -48,6 +49,7 @@ abstract class UpdateActionCache extends ActionCache  {
         $this->admin->buildUpdateForm($controller, $object, $builder, $this ) ;
         $this->buildFormReferer($request, $builder, $object, $list_url);
         $form  = $builder->getForm() ;
+        $this->setForm($form);
         
         if( $request->isMethod('POST') ) {
              $form->bind($request);
@@ -55,13 +57,8 @@ abstract class UpdateActionCache extends ActionCache  {
                 
                 $this->admin->onUpdate($controller, $request, $this, $object, $form ) ;
                 if ( $form->isValid() )  {
-                    $em = $this->admin->getManager() ;
-                    $uow  = $em->getUnitOfWork();
                     $this->admin->update( $object ) ;
-                    $request->getSession()->getFlashBag()->add('info',
-                                $this->trans( 'app.action.update.finish' , $object )
-                            ) ;
-                    return $controller->redirect( $this->getFormReferer($form) ) ;
+                    return $this->admin->afterUpdate($controller, $request, $this, $object, $form) ;
                 }
              }
         }

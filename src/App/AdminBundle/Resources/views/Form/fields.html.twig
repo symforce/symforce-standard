@@ -138,7 +138,9 @@
         <input type="hidden" value="" name="{{ full_name }}[crop]" />
         <input type="file" class="app_form_file_handle" />
         <div class="app_form_file_view">
-            <div class="app_form_image_box" style="width:{{ img.width }}px;"><img src="" /></div>
+{#            <div class="app_form_image_box" style="width:{{ img.width }}px;"><img src="" /></div>#}
+            <div class="app_form_image_box"><img src="" /></div>
+            {% if full_name != 'form[normal_logo]' %}
             <div class="app_form_image_tools">
                 <a class="app_form_image_tools_item app_form_image_adjust">调整</a>
                 {#
@@ -147,8 +149,13 @@
             #}
             </div>
             图片尺寸: {{ img.width }}x{{ img.height }}
+            {% endif %}
         </div>
     </div>
+    
+
+    {{ block('form_message') }}
+
 </div>
 {% endspaceless %}
 {% block appimage_javascripts %}
@@ -177,6 +184,9 @@
             <input type="file" class="app_form_file_handle" />
             <a class="app_form_file_view"></a>
         </div>
+        
+        {{ block('form_message') }}
+
     </div>
     {% endspaceless %}
     {% block appfile_javascripts %}
